@@ -10,15 +10,18 @@ height_after = 48.0;
 total_displacement = 7.25;
 height_before = height_after - total_displacement;
 
-displacement_rate = 2/60;
+displacement_rate = 2; % mm / minute
+
+A0 = W2*t;
 
 %% Plot force-displacement
 data = importdata("data/force.txt");
 
 % load time and shift back so that it starts at 0
-time = data.data(:, 1) / 1e-3;  % time is in seconds
+time = data.data(:, 1) / 1e3;   
 time = time - time(1);          % shift to 0
-displacement = time * displacement_rate;
+time_minutes = time / 60;
+displacement = time_minutes * displacement_rate;
 
 force = data.data(:, 2);        % N
 
@@ -26,14 +29,35 @@ fig = figure();
 ax = axes(fig);
 
 plot(displacement, force);
+hold(ax, 'on');
 
-xlabel(ax, "Displacement");
-ylabel(ax, "Force");
+xlabel(ax, "Displacement [mm]");
+ylabel(ax, "Force [N]");
 title(ax, "Force - Displacement curve for Polycarbonate sample")
 
+% Draw lines at zero force and at final "zero"
+f1 = force(1);
+tt = [displacement(1), displacement(end)];
+ff = [f1, f1];
+plot(tt, ff, 'Color', '#080808', 'LineStyle', '--');
+
+fe = force(end);
+tt = [displacement(1), displacement(end)];
+ff = [fe, fe];
+plot(tt, ff, 'Color', '#080808', 'LineStyle', '--');
+
+% Make annotation about discrepancy
+delta_f = abs(fe - f1);
+tmid = (displacement(end) + displacement(1)) / 2;
+fmid = (fe);
+text(ax, tmid, fmid, ...
+    sprintf('$ |\\Delta F| \\approx %.2f N$', delta_f), ...
+    'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'right', 'Interpreter', 'latex');
+
+% Save figure to file
 set(fig, 'Units', 'centimeters');
 set(fig, "Position", [0, 0, 14, 10]);
 
 theme(fig, "light")
 saveas(fig, "results/force_displacement.png")
-close(fig)
+% close(fig)

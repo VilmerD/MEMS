@@ -1,0 +1,119 @@
+% The class loads biblatex with backend=biber. This starter's compile
+% pipeline runs the classic bibtex/(pdf|xe|lua)latex cycle (no biber pass), so
+% the backend is switched to bibtex here, before the class loads biblatex —
+% biblatex silently accepts a plain .bib file either way.
+\PassOptionsToPackage{backend=bibtex}{biblatex}
+\documentclass[9pt,a4paper,twocolumn,twoside]{rho-class/rho}
+\usepackage[english]{babel}
+
+%----------------------------------------------------------
+% Title
+%----------------------------------------------------------
+
+\doctype{Lab Report}
+\title{A short, descriptive title for your paper}
+
+%----------------------------------------------------------
+% Authors, affiliations and dates
+%----------------------------------------------------------
+
+\author[{\textasteriskcentered},a,1]{Jane Smith}
+\author[b,2]{Alex Chen}
+
+\affil[a]{Department of Physics, Fictional State University}
+\affil[b]{Institute for Applied Research, Fictional State University}
+
+\dates{Manuscript compiled \today}
+
+\corres{\textsuperscript{\textasteriskcentered}Corresponding author: \href{mailto:jane.smith@example.edu}{jane.smith@example.edu}}
+
+\docinfo{This article was prepared with the rho-class LaTeX template and compiled with pdfLaTeX.}
+
+\journalname{Working Papers}
+\journal{Fictional State University}
+\theday{\today}
+\vol{1}
+\no{1}
+
+%----------------------------------------------------------
+% Abstract and keywords
+%----------------------------------------------------------
+
+\begin{abstract}
+    Replace this abstract with a concise, self-contained summary of the
+    paper: the problem addressed, the method used, and the main result.
+    Two to four sentences is typical for a research article.
+\end{abstract}
+
+\keywords{keyword one, keyword two, keyword three}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+Start the introduction here. Motivate the problem, situate it against prior
+work with a citation~\cite{example2024}, and state the contribution of this
+paper in the last paragraph of the section.
+
+\section{Background}
+
+Use this section for the material a reader needs before the main
+contribution: definitions, notation, or a summary of related methods.
+
+\begin{note}
+    The \texttt{note} environment is useful for calling out an assumption,
+    caveat, or aside without breaking the flow of the main text.
+\end{note}
+
+\section{Methods}
+
+Describe the approach taken. A typical equation is written as
+
+\begin{equation}
+    E = mc^2
+    \label{eq:example}
+\end{equation}
+
+and referenced in text with \cref{eq:example}. The \texttt{stix2} font this
+class loads covers the symbols needed for most equations without also
+loading \texttt{amsmath}/\texttt{amssymb}.
+
+\begin{info}
+    Code listings can be added with the \texttt{listings} package, already
+    loaded by this class:
+\begin{lstlisting}[language=Python, caption={A minimal example.}]
+def greet(name):
+    return f"Hello, {name}!"
+\end{lstlisting}
+\end{info}
+
+\section{Results}
+
+Present the findings here. \Cref{fig:example} shows a placeholder figure —
+replace \texttt{figures/example.pdf} with your own artwork.
+
+\begin{figure}[htbp]
+    \centering
+    \fbox{\rule{0pt}{3cm}\rule{0.7\linewidth}{0pt}}
+    \caption{Replace this placeholder with your own figure.}
+    \label{fig:example}
+\end{figure}
+
+\section{Discussion}
+
+Interpret the results, note limitations, and compare against the background
+material introduced above.
+
+\section{Conclusion}
+
+Summarise the contribution and, if relevant, point to future work.
+
+%----------------------------------------------------------
+% Bibliography
+%----------------------------------------------------------
+
+\printbibliography
+
+\end{document}

@@ -6,12 +6,16 @@
 \usepackage{sansmath}
 \usepackage{amsmath, amssymb, amsfonts}
 
-\graphicspath{{../results/}}
+% Bibliographi
+\usepackage{url}
+\usepackage[numbers]{natbib}
+
+\graphicspath{{../results/}, {../figures/}}
 
 %opening
 \title{MEMS: Lab1}
 \author{Vilmer Dahlberg}
-
+ 
 \begin{document}
 
 \maketitle
@@ -21,7 +25,7 @@
 \end{abstract}
 
 \section{Introduction}
-In this experiment a uniaxial tensile test is performed on a polycarbonate specimen. 
+Polycarbonates is a type of thermoplastic polymer which, due to its ease of use, high strength and toughness, can be found in many modern engineering applications \citet{wikipedia_polycarbonate}. To gain insight into the material properties of polycarbonate, we perform in this experiment a uniaxial tensile test. The specimen consists of a thin rectangular brick, with two circular notches in the center, shown in Figure \ref{fig:sample}.
 
 Mention that we use a machine to load the specimen, and use displacement-controlled loading.
 
@@ -42,12 +46,26 @@ We then measure the height of the specimen. [but we only need this for the dic s
 
 The measuring software and tensile testing machine are then started at the same time. When the specimen fails the lab-view program and tensile test machine are then shut off.
 
+\begin{figure}
+	\centering
+	\includegraphics[width=6cm]{Placeholder.png}
+	\caption{Mosiac of experimental set-up}
+	\label{fig:sample}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=10cm]{figure_mosiac.pdf}
+	\caption{Mosiac of experimental set-up}
+	\label{fig:method:setup}
+\end{figure}
+
 \section{Results}
 
 These are the results
 \begin{figure}[t]
 	\centering
-	\includegraphics[width=14cm]{force_displacement.png}
+	\includegraphics[width=10cm]{force_displacement.png}
 	\caption{Plot of the force-displacement data gathered during the tensile test.}
 	\label{fig:force_displacement}
 \end{figure}
@@ -64,5 +82,9 @@ Some points i would like to discuss.
 \end{itemize}
 
 \section{Conclusions}
+
+
+\bibliographystyle{unsrtnat}
+\bibliography{refs.bib}
 
 \end{document}

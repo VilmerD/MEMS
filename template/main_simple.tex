@@ -1,0 +1,127 @@
+% Self-contained local starter inspired by the NTNU Laboratory Report in Physics
+% template by Vebjorn S. Forde (CC BY 4.0):
+% https://www.overleaf.com/latex/templates/ntnu-laboratory-report-in-physics/zrkxstqtpdpv
+% This is a simplified adaptation, not the original multi-file project.
+% Compile with pdfLaTeX in TeXstudio. Replace the example text and metadata.
+
+\documentclass[11pt,a4paper]{article}
+
+% Common TeX Live packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\geometry{margin=25mm}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage[numbers,sort&compress]{natbib}
+
+% ---------- Report details: edit these ----------
+\newcommand{\reporttitle}{Title of the Laboratory Report}
+\newcommand{\course}{Course name and code}
+\newcommand{\studentname}{Your name}
+\newcommand{\studentid}{Student number (optional)}
+\newcommand{\labdate}{Date of experiment}
+\newcommand{\submissiondate}{Date of submission}
+\newcommand{\institution}{Department / University}
+
+\title{\reporttitle}
+\author{\studentname\\\small \studentid\\\small \course\\\small \institution}
+\date{\small Experiment: \labdate \quad\textbar\quad Submitted: \submissiondate}
+
+\begin{document}
+	\maketitle
+	
+	\begin{abstract}
+		Briefly state the purpose of the experiment, the method, the most important
+		quantitative result, and the main conclusion. Keep this self-contained and
+		usually short. Example: The acceleration due to gravity was estimated from
+		measurements of a falling object to be \SI{9.8}{\metre\per\second\squared},
+		within the measurement uncertainty.
+	\end{abstract}
+	
+	\noindent\textbf{Keywords:} experiment; measurement; uncertainty
+	
+	\section{Introduction}
+	Explain the scientific question and why it matters. State the objective of the
+	experiment and give enough context for the reader to understand the report.
+	Cite sources where appropriate, for example \citep{example-reference}.
+	
+	\section{Theory}
+	Present the principles and equations needed to interpret the measurements.
+	Define every symbol and include assumptions. For example, a linear model can be
+	written as
+	\begin{equation}
+		y = ax+b,
+		\label{eq:linear-model}
+	\end{equation}
+	where $a$ is the slope and $b$ is the intercept.
+	
+	\section{Method and Equipment}
+	Describe the apparatus and procedure with enough detail that another person
+	could repeat the experiment. Include a labelled figure if it helps. Put image
+	files in the same folder as this \texttt{.tex} file and replace the filename
+	below when you add one.
+	
+	% Uncomment and edit this figure block when you have an image:
+	% \begin{figure}[H]
+		%     \centering
+		%     \includegraphics[width=0.7\linewidth]{apparatus.png}
+		%     \caption{Labelled experimental setup.}
+		%     \label{fig:setup}
+		% \end{figure}
+	
+	\section{Results}
+	Report observations and calculated results clearly. Keep interpretation for
+	the discussion. Include units and uncertainty, and refer to each table or
+	figure in the text. Table~\ref{tab:example} shows a simple example.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Example measurements. Replace these values with your data.}
+		\label{tab:example}
+		\begin{tabular}{ccc}
+			\toprule
+			Trial & $x$ (unit) & $y$ (unit) \\
+			\midrule
+			1 & 1.0 & 2.1 \\
+			2 & 2.0 & 4.0 \\
+			3 & 3.0 & 6.2 \\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+	
+	\section{Discussion}
+	Interpret the results in relation to the theory and objective. Compare with
+	expected or reference values when relevant. Discuss uncertainty, likely error
+	sources, limitations, and possible improvements. Explain unexpected results
+	rather than simply listing them.
+	
+	\section{Conclusion}
+	Summarise the main finding and whether the objective was achieved. Include the
+	most important numerical result with its uncertainty when applicable. Do not
+	introduce new results here.
+	
+	\section*{Acknowledgements}
+	Optional. Acknowledge help or resources that contributed to the work.
+	
+	\begin{thebibliography}{9}
+		\bibitem{example-reference}
+		Author, ``Title of source,'' Publisher or journal, year. Replace this example
+		with the sources you actually used.
+	\end{thebibliography}
+	
+	\appendix
+	\section{Supporting calculations}
+	Optional. Put extended derivations, additional data, or other supporting
+	material here. Remove this appendix if it is not needed.
+	
+\end{document}
