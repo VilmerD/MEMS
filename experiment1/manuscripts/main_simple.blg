@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99d (TeX Live 2025/Debian)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main_simple.aux
+The style file: unsrtnat.bst
+Database file #1: refs.bib
+Warning--empty year in wikipedia_polycarbonate
+Warning--empty year in wikipedia_load_cell
+You've used 3 entries,
+            2481 wiz_defined-function locations,
+            565 strings with 4831 characters,
+and the built_in function-call counts, 847 in all, are:
+= -- 75
+> -- 21
+< -- 3
++ -- 13
+- -- 6
+* -- 37
+:= -- 137
+add.period$ -- 13
+call.type$ -- 3
+change.case$ -- 6
+chr.to.int$ -- 2
+cite$ -- 5
+duplicate$ -- 42
+empty$ -- 91
+format.name$ -- 9
+if$ -- 181
+int.to.chr$ -- 2
+int.to.str$ -- 4
+missing$ -- 0
+newline$ -- 27
+num.names$ -- 9
+pop$ -- 39
+preamble$ -- 1
+purify$ -- 3
+quote$ -- 0
+skip$ -- 24
+stack$ -- 0
+substring$ -- 6
+swap$ -- 8
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 21
+warning$ -- 2
+while$ -- 6
+width$ -- 0
+write$ -- 51
+(There were 2 warnings)

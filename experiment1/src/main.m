@@ -12,7 +12,7 @@ height_before = height_after - total_displacement;
 
 displacement_rate = 2; % mm / minute
 
-A0 = W2*t;
+A0 = W2*t * 1e-6;
 
 %% Plot force-displacement
 data = importdata("data/force.txt");
@@ -23,7 +23,9 @@ time = time - time(1);          % shift to 0
 time_minutes = time / 60;
 displacement = time_minutes * displacement_rate;
 
+% fix force so that it's zero at the end
 force = data.data(:, 2);        % N
+force = force - force(end);
 
 fig = figure();
 ax = axes(fig);
@@ -60,4 +62,15 @@ set(fig, "Position", [0, 0, 14, 10]);
 
 theme(fig, "light")
 saveas(fig, "results/force_displacement.png")
-% close(fig)
+close(fig)
+
+% Output data
+fprintf("\n")
+fprintf("Load\n")
+fprintf("Maximum load:      %2.3f\n", max(force));
+fprintf("Load at failure:   %2.3f\n", force(332))
+
+fprintf("\n")
+fprintf("Stress[kPa]\n")
+fprintf("Maximum stress:      %2.3f\n", max(force)/A0*1e-3);
+fprintf("Stress at failure:   %2.3f\n", force(332)/A0*1e-3)

@@ -1,0 +1,28 @@
+\begin{thebibliography}{3}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[{Wikipedia contributors}({\natexlab{a}})]{wikipedia_polycarbonate}
+{Wikipedia contributors}.
+\newblock {Polycarbonate}.
+\newblock \url{https://en.wikipedia.org/wiki/Polycarbonate}, {\natexlab{a}}.
+\newblock Accessed: 2026-11-09.
+
+\bibitem[{National Instruments}(2017)]{national_instruments_labview_2017}
+{National Instruments}.
+\newblock {LabVIEW} (version 2017).
+\newblock Computer software, 2017.
+\newblock URL
+  \url{https://www.ni.com/en/support/documentation/supplemental/17/labview-2017-patch-details.html}.
+\newblock Accessed: 2026-11-09.
+
+\bibitem[{Wikipedia contributors}({\natexlab{b}})]{wikipedia_load_cell}
+{Wikipedia contributors}.
+\newblock {Load cell}.
+\newblock \url{https://en.wikipedia.org/wiki/Load_cell}, {\natexlab{b}}.
+\newblock Accessed: 2026-11-09.
+
+\end{thebibliography}
