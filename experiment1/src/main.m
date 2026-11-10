@@ -30,7 +30,8 @@ force = force - force(end);
 fig = figure();
 ax = axes(fig);
 
-plot(displacement, force);
+plot(displacement, force, ...
+     'LineWidth', 2);
 hold(ax, 'on');
 
 xlabel(ax, "Displacement [mm]");

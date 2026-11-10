@@ -25,17 +25,13 @@
 \usepackage[numbers]{natbib}
 
 % ---------- Report details: edit these ----------
-\newcommand{\reporttitle}{Title of the Laboratory Report}
-\newcommand{\course}{Course name and code}
-\newcommand{\studentname}{Your name}
-\newcommand{\studentid}{Student number (optional)}
-\newcommand{\labdate}{Date of experiment}
-\newcommand{\submissiondate}{Date of submission}
-\newcommand{\institution}{Department / University}
-
-\title{\reporttitle}
-\author{\studentname\\\small \studentid\\\small \course\\\small \institution}
-\date{\small Experiment: \labdate \quad\textbar\quad Submitted: \submissiondate}
+\newcommand{\reporttitle}{Uniaxial Tensile Test of Polycarbonate}
+\newcommand{\course}{Modern Experimental Mechanics}
+\newcommand{\studentname}{Vilmer Dahlberg}
+\newcommand{\studentid}{}
+\newcommand{\labdate}{2026/11/05}
+\newcommand{\submissiondate}{\today}
+\newcommand{\institution}{Department of Construction Sciences,  Lund University}
 
 %----------------------------------------------------------
 % Math macros
@@ -53,29 +49,37 @@
 
 \begin{document}
 	
-	\maketitle
+	\begin{frontmatter}
 	
-	\noindent\textbf{Keywords:} experiment; measurement; uncertainty
+		\title{\reporttitle}
+		\author{\studentname}
+		\address{\course\\\institution}
+		
+		\begin{abstract}
+			In this experiment a uniaxial tensile test is performed on a polycarbonate sample. 
+		\end{abstract}
+		
+		\begin{keyword}
+			experiment \sep measurement \sep uncertainty
+		\end{keyword}
 	
-	\begin{abstract}
-		qwerqwerqwer
-	\end{abstract}
+	\end{frontmatter}
 	
 	\section{Introduction}
 	Polycarbonate is a type of thermoplastic polymer which, due to its malleability, high strength and toughness, can be found in many modern engineering applications \cite{wikipedia_polycarbonate}. To gain further insight into the material properties of polycarbonate, we perform in this experiment a uniaxial tensile test. The polycarbonate sample, shown in Figure \ref{fig:method:setup}a consists of a thin rectangular brick with two vertically centered circular notches. The sample is mounted in a tensile testing rig, which consists of a) a motor which pulls the sample at a constant rate of displacement (it est displacement controlled loading) and b) a load cell which measures the force required to pull the sample apart. The data is recorded in a LabVIEW \cite{national_instruments_labview_2017} program.
 	
-	To measure the force we use a load cell, which in this experiment consists, of a metal body fitted with a strain gauge. As the load cell deforms due to the external load, the strain gauge deforms, causing a change in electrical resistance. This small difference is measured as a change in voltage and converted into a strain. The stress can then be computed under the assumption of elastic response, which finally gives the force \cite{wikipedia_load_cell}.
+	A load cell is used to measure the force. In this experiment the load cell consists of a metal body fitted with a strain gauge. As the load cell deforms due to the external load, the strain gauge deforms, causing a change in electrical resistance. This small difference is measured as a change in voltage and converted into a strain. The stress can then be computed under the assumption of elastic response, which finally gives the force \cite{wikipedia_load_cell}.
 	
 	Given a cross-section of a continuum body at some spatial point $\bm{x}$ with area $A$ and normal $\bm{n}$ we define the stress vector $\bm{s}$ at that point as
 	$$
-	\bm{s} = \bm{\sigma}\bm{n} = \lim_{\Delta \bm{A} \rightarrow 0} \frac{\Delta \bm{P}}{\Delta A}
+		\bm{s} = \bm{\sigma}\bm{n} = \lim_{\Delta A \rightarrow 0} \frac{\Delta \bm{P}}{\Delta A}
 	$$
 	where $\Delta \bm{P}$ the measured traction. Unfortunately, it is in practice impossible to measure the stress directly, for many reasons. Firstly, it's a destructive process, meaning it can realistically only be done once before the sample is destroyed. Secondly, it is impossible to make cross sections with infinitesimally small areas and thirdly any such cross-sections would immediately be out of static equilibrium. Instead we rely on proxies, such as strain, or simplified geometries.
 	
 	
-	Consider a cylindrical rod $\mathcal{R}$ with initial length and cross-sectional area $l_0$ and $A_0$ consisting of a homogeneous material. When subjected to a force $P$ along its axial direction the rod will have the new length and cross-sectional areas $l$ and $A$. The (small strain) stretch along its axial direction is given by 
+	Consider a homogeneous cylindrical rod $\mathcal{R}$ with initial length and cross-sectional area $l_0$ and $A_0$. When subjected to a force $P$ along its axial direction the rod will have the new length and cross-sectional areas $l$ and $A$. The (small strain) stretch along its axial direction is given by 
 	$$
-	\epsilon_E = \frac{l-l_0}{l_0} \implies \frac{V}{V_0} = \frac{lA}{l_0A_0} = \left(\epsilon_E + 1\right)\frac{A}{A_0}
+		\epsilon_E = \frac{l-l_0}{l_0} \implies \frac{V}{V_0} = \left(\epsilon_E + 1\right)\frac{A}{A_0}
 	$$
 	Furthermore, mechanical equilibrium requires the stress to be equal for any axial-orthogonal cross-section. We are then able to define the \textit{engineering} and \textit{true} stress as
 	\begin{align*}
@@ -89,10 +93,19 @@
 	
 	The goal with this experiment is to perform a tensile test of a polycarbonate sample.
 	
-	We assume that the sample
-	
 	\section{Method}
-	Firstly the sample's dimensions are measured using a caliper. The recorded lengths are shown in Table \ref{tab:method:polycarbonate dimensions.}.
+	Firstly, the sample's dimensions are measured using a caliper. The sample is then loaded into the machine, as shown in Figure \ref{fig:method:setup}b. To ensure that no unintensional torsional forces are applied to the sample, the holding grips are held in place while they are tightened. Once the sample is loaded into the rig its height is measured.
+	
+	The tensile testing rig is set to displacement controlled loading at a constant rate of $2\,\text{mm}/60\text{s}$. The rig and data acquisition are then simultaneously started. The tensile testing machine is allowed to run until the sample fails, see Figure \ref{fig:method:setup}c, at which point the machine and recording software are stopped.
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.5\textwidth]{figure_mosiac.pdf}
+		\caption{Mosaic of experimental set-up}
+		\label{fig:method:setup}
+	\end{figure}
+	
+	\section{Results and discussion}
 	
 	\begin{table}
 		\caption{Recorded dimensions of polycarbonate sample, in millimeters $[mm]$.}
@@ -105,21 +118,9 @@
 		\label{tab:method:polycarbonate dimensions.}
 	\end{table}
 	
-	The sample is then loaded into the machine, as shown in Figure \ref{fig:method:setup}b. To ensure that no adversarial torsional forces are applied to the sample during loading, the holding grips are held in place while they are tightened. Once the sample is loaded into the rig, its height is measured.
+	What is the measuing unceirtanty of the strain gauge?
 	
-	The tensile loading machine is set to displacement controlled loading at a constant rate of $2\,\text{mm}/60\text{s}$. The machine and data acquisition are then simultaneously started. The tensile testing machine is then allowed to run until the sample fails, see Figure \ref{fig:method:setup}c, at which point the machine and recording software are stopped simultaneously.
-	
-	\begin{figure}
-		\centering
-		\includegraphics[width=0.5\textwidth]{figure_mosiac.pdf}
-		\caption{Mosaic of experimental set-up}
-		\label{fig:method:setup}
-	\end{figure}
-	
-	\section{Results and discussion}
-	How many significant figures?
-	
-	The acquired force-displacement data is shown in Figure \ref{fig:force_displacement}. The data was calibrated such that the load at the final time step is zero, which is consistent with the fact that the sample has failed. This implies that the sample was under some tension from the beginning due to fastening it too tight in the rig. The maximum load and load at failure is $71.565\,\text{N}$ and $61.318\,\text{N}$ respectively corresponding to engineering stresses of $2379.959\,\text{kPa}$ and $2039.183\,\text{kPa}$, respectively.
+	The recorded lengths are shown in Table \ref{tab:method:polycarbonate dimensions.}. The acquired force-displacement data is shown in Figure \ref{fig:force_displacement}. The data was calibrated such that the load at the final time step is zero, which is consistent with the fact that the sample has failed. This implies that the sample was under some tension from the beginning due to fastening it too tight in the rig. The maximum load and load at failure is $71.565\,\text{N}$ and $61.318\,\text{N}$ respectively corresponding to engineering stresses of $2379.959\,\text{kPa}$ and $2039.183\,\text{kPa}$, respectively.
 	
 	The first thing to note is that the gathered force data is a reflection of the samples macroscopic response to the applied load. As such, it is hard to draw any meaningful conclusions about the material behavior, i.e. the local response. To do any such analysis we require stress and strain measurements. Furthermore, it is worth noting that the data comes from one single sample. The experiment should ideally be repeated multiple times to take into account measurement errors, the human factor and so on. Finally, we note note that the sample is heterogeneous, but treated as homogeneous.
 	
@@ -128,25 +129,14 @@
 	
 	\begin{figure}[t]
 		\centering
-		\includegraphics[width=10cm]{force_displacement.png}
+		\includegraphics[width=0.5\textwidth]{force_displacement.png}
 		\caption{Plot of the force-time data gathered during the tensile test. The force-displacement graph can be inferred from the displacement rate by scalar multiplication.}
 		\label{fig:force_displacement}
 	\end{figure}
 	
 	
-	\section{Discussion}
-	Some points i would like to discuss.
-	\begin{itemize}
-		\item[] You'd expect the curve to be linear initially, but it does not look like it. 
-		\item[] Directly after the maximum load there is a decrease in force, this happens because we are using a displacement controlled loading. But maybe if we were to use a path following scheme we could trace the snap-back.
-		\item[] After the drop there is a subsequent small increase in load, after failure finally occurs at circa 50N.
-		\item[] What i personally find interesting is that we see no hysteresis, which is maybe what you would expect from polycarbonate.
-		\item[] We also note (and maybe should begin with) the fact that we are looking at force-displacement data, and not a stress/strain relationship. Therefore it is hard to do any comparison between the results and any material model, which requires local data. This could be improved somewhat by doing a DIC, but the stress information is either way unknown.
-		\item[] Discrepancy in "zero" force between start and end of test
-		\item[] Poisson effect
-	\end{itemize}
-	
 	\section{Conclusions}
+	In this experiment a uniaxial tensile test was successfully performed on a polycarbonate sample. Not much can be said about the material behavour from the force-displacement data.
 	
 	\bibliographystyle{unsrtnat}
 	\bibliography{refs.bib}
