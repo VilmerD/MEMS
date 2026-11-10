@@ -24,8 +24,10 @@ time_minutes = time / 60;
 displacement = time_minutes * displacement_rate;
 
 % fix force so that it's zero at the end
+force_scaling = 26.07;
 force = data.data(:, 2);        % N
 force = force - force(end);
+force = force * force_scaling;
 
 fig = figure();
 ax = axes(fig);
@@ -36,7 +38,7 @@ hold(ax, 'on');
 
 xlabel(ax, "Displacement [mm]");
 ylabel(ax, "Force [N]");
-title(ax, "Force - Displacement curve for Polycarbonate sample")
+title(ax, ["Force - Displacement curve for"; "Polycarbonate sample"])
 
 % Draw lines at zero force and at final "zero"
 f1 = force(1);
@@ -57,6 +59,11 @@ text(ax, tmid, fmid, ...
     sprintf('$ |\\Delta F| \\approx %.2f N$', delta_f), ...
     'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'right', 'Interpreter', 'latex');
 
+% Set ticks
+xticks(ax, 1:7);
+yticks(ax, 0:250:2000);
+grid(ax, 'on');
+
 % Save figure to file
 set(fig, 'Units', 'centimeters');
 set(fig, "Position", [0, 0, 14, 10]);
@@ -68,10 +75,12 @@ close(fig)
 % Output data
 fprintf("\n")
 fprintf("Load\n")
-fprintf("Maximum load:      %2.3f\n", max(force));
-fprintf("Load at failure:   %2.3f\n", force(332))
+fprintf("Maximum load:      %2.2fkN\n", max(force)*1e-3);
+fprintf("Load at failure:   %2.2fkN\n", force(332)*1e-3)
 
 fprintf("\n")
 fprintf("Stress[kPa]\n")
-fprintf("Maximum stress:      %2.3f\n", max(force)/A0*1e-3);
-fprintf("Stress at failure:   %2.3f\n", force(332)/A0*1e-3)
+fprintf("Maximum stress:      %2.2fMPa\n", max(force)/A0*1e-6);
+fprintf("Stress at failure:   %2.2fMPa\n", force(332)/A0*1e-6)
+
+

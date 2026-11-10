@@ -1,0 +1,49 @@
+\chapter{Experimental method in mechanics and full-field methods}
+
+% Replace this example text with the content of Part 1.
+\section{Overview}
+
+\section{Main discussion}
+
+\section{Experimental mechanics and the experimental method}
+%• What is an experiment?
+%• Why do we do experiments?
+In my opinion, the definition of an experiment is very simple: An experiment is a procedure in which we seek to learn more about a process with one or more inputs and outputs. And in experimental mechanics, the processes we seek to understand are mechanical in nature. There are many reasons to do experiments. Because it's fun. Because we want to create models of reality to be used for engineering, or otherwise.
+ 
+Now this definition not constitute a \textit{good} experiment per say. 
+
+Broadly speaking, in experimental mechanics we seek a deeper understanding of the mechanical behavior of mechanical systems and materials. I don't exactly know what that means but something like that. We are also doing some experiments, yes, experiments- This is because we want to understand the mechanical behavior. Well I guess that is just saying the same thing twice but hey I need to fill this out so I can reach at least two pages. So we are doing experiments, and doing them in a controlled manner, so as we can eliminate spurious external influences and just look at one thing at the same time (there is a word for this i just cant think of it) and so we define dependent variables and independent variables. and we vary the independent variables (or perhaps just one at a time) and then observe the dependent variables. Hence we need to be able to make observations of our systems.
+
+
+%• What do we want to measure in experimental mechanics?
+Historically we have only been able to observe macroscopic behaviors, such as the force or displacement. But in modern times we are able to to full-field analyses.
+
+%• How might we use the information we gain?
+So after we've made some observations of our system we construct models which describe this behavior, so we are able to make predictions of other systems which are similar but not identical. This is in some sense the back-bone of engineering, which requires precise models to be able to construct great things.
+
+Often times, even though we control our experiment meticulously there will be some spurious or random processes, which is why we often want to repeat the experiment multiple times. We therefore \textit{want} to generate more data than our model requires. Thus when analyzing the data we have to do some kind of least squares or better yet take randomness and uncertainties (so maybe here i am looking for the word standard deviation) into account when fitting the data to our model. If we don't collect enough data we risk over-fitting the data to our model, in which case we might have very bad predictions outside the range of data we have collected.
+
+You also have to be careful and think twice about what we're actually measuring. For example, to measure a force we often use a load cell, which in reality actually measures the stretch of a strain gauge, which actually measures the resistance of a wire being stretched which is actually measuring a voltage, and I don't know if i can go deeper here but you get my idea. We have to be careful to make sure that what we're measuring is within the range of the instrument we're using (i guess) and other things. Sometimes it can be hard to know exactly what we're measuring (example with the experiment where the change in temperature changed the strain and so on).
+
+You also have to be careful about what are facts and what are inferences you can make based on facts. You can also make judgments, which are subjective observations. They reveal our values and feelings towards something (this is copied verbatim).
+
+%• What are resolution, accuracy and precision?
+Given a constant process, i.e. experiment, and a measuring device \textit{accuracy} describes how consistent multiple measurements are no matter how close it is to the expected value. I.e. a high accuracy measuring device has low standard deviation. On the other hand, precision describes how close multiple measurements are to the true value. I.e. a high precision measuring device has a low deviation from the expected value of the process. All observations which are made of the world are at the end of the day digital, i.e we must produce a single value for each measurement. The resolution of a measuring device is the smallest amount two different results can deviate.
+
+
+
+
+\section{Full-Field and in-situ measurements in experimental mechanics}
+%• What are full-field measurements and why are they of interest in experimental mechanics?
+As mentioned above, historically we've only been able to do measurements of macroscopic (global) quantities. This is because measuring local quantities have historically required destructive methods. Which makes sense, how else would you look "inside" something? Unfortunately, it's very difficult to draw any conclusions from macroscopic experiments which can be applied to other systems. Often times we seek some kind of "local" material model, so that we can apply the knowledge to other "geometries". This requires "full field" measurements. 
+
+Many modern materials are heterogeneous, and understanding their mechanical properties requires not only full-field analyses, but also multiple scales. Sometimes we also want to know multi-modal knowledge, for example paper-based materials are very sensitive to moisture and temperature. Small changes can have big effects on the mechanical response.
+
+%• What sorts of fields can be measured?
+There are many types of fields we would like to measure, for example the orientation of fibres in wood/paper materials. The grain orientation in a metal or granular structure. The chemical expansion of a battery during charging/decharging. Tracking dislocations (plasticity) in loading. Crack growth. Phase transformations. Material damage and fatigue.
+
+%• What is meant by “in-situ” in the context of experimental mechanics?
+In-situ experiments are experiments done during some kind of mechanical loading or otherwise. I.e. the independent variable may be a load or flow of something. We are in other words not looking at something static, or something \textit{postmortem}, i.e. after the deformation.
+
+%• Why are in-situ experiments of interest?
+We want to do in-situ experiments so that we can separate the geometry from the material/local behavior. In this way we can predict the response of structures consisting of the same material, but with a different geometry. This is a corner-stone of FEM.
