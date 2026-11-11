@@ -1,5 +1,20 @@
+% Measurements are in mm and seconds
+L1 = 80.6;
+L2 = 10.0;
+W1 = 25.5;
+W2 = 9.7;
+t = 3.1;
+
+height_after = 48.0;
+total_displacement = 7.25;
+height_before = height_after - total_displacement;
+
+displacement_rate = 2; % mm / minute
+
+%% Look at first image
+
 % Get image files
-fileform = "data/DIC-%04i_0.tif";
+fileform = "../experiment1/data/DIC-%04i_0.tif";
 step_init = 288;
 step_final = 359;
 nfiles = step_final - step_init;
@@ -9,87 +24,141 @@ for i = 1:nfiles
     filenames{i} = sprintf(fileform, stepnbr);
 end
 
-% Read images
+% Read first image
+Img0 = importdata(filenames{1});
 
 % Read image metadata
-
-% Prepare output
+[ImgH, ImgW] = size(Img0);
 
 % Select operating window
-window = [2300, 3100, 2400, 3200];
-d = importdata(filenames{1});
-image(d(window(1):window(3), window(2):window(4)));
+window_big.rows = [1240, 3550];
+window_big.cols = [2600, 4040];
+
+% Show first image
+figure;
+subplot(1, 2, 1);
+imagesc(Img0);
+title("First image");
+
+Img0_sub = GetSubimage(Img0, window_big);
+subplot(1, 2, 2);
+imagesc(Img0_sub)
+title("First image zoomed to fit specimen");
+
+%% DO DIC
+window.rows = [2150, 2350];
+window.cols = [3450, 3650];
 
 % Select convolution parameters
-LS = 6;      % stencil size
-LG = 20;     % padding size
+LS = 45;      % motif size
+LG = 305;     % search window size
 
-m = 10;
-CurrImage = importdata(filenames{m});
-NextImage = importdata(filenames{m+10});
+m = 1;
+dm = 0;
+PrevImage = importdata(filenames{m});
+CurrImage = importdata(filenames{m+dm});
 
-dx = [];
-dy = [];
+% Prepare output
+dx = zeros(ImgH, ImgW);
+dy = zeros(ImgH, ImgW);
 
-fig = figure();
-ax1 = subplot(1, 3, 1);
-ax2 = subplot(1, 3, 2);
-ax3 = subplot(1, 3, 3);
+% Prepare figure
+doplotscan = 0;
+doplotdiff = 1;
+if (doplotscan)
+    figScan = figure();
+    
+    axs(1) = subplot(3, 2, 1:4);
+    imgs(1) = imagesc(axs(1), zeros(LG));
+    hold(axs(1), 'on');
+    clim(axs(1), [0, 255]);
+    lines = plot(axs(1), [0, 1], [0, 1], 'r');
+    title(axs(1), "Grid");
+    
+    axs(2) = subplot(3, 2, 5);
+    imgs(2) = imagesc(axs(2), zeros(LS));
+    hold(axs(2), 'on');
+    clim(axs(2), [0, 255]);
+    title(axs(2), "Stencil");
+    
+    axs(3) = subplot(3, 2, 6);
+    imgs(3) = imagesc(axs(3), zeros(LS));
+    hold(axs(3), 'on');
+    clim(axs(3), [0, 255]);
+    title(axs(3), "Best Fit");
 
+    scanplots.axs = axs;
+    scanplots.imgs = imgs;
+    scanplots.lines = lines;
+end
 
-% for each grid point on the operating window
-for i = window(1):window(3)
-    fprintf("Row = %+6i\n", i)
-    for j = window(2):window(4)
-        % Extract stencil to search for
-        S = ExtractWindow(CurrImage, i, j, LS);
-        image(ax1, S);
+% Plot the row of new data after each row is done
+if (doplotdiff)
+    figdiff = figure();
 
-        % Convolve over sub-window
-        ccgrid = ones(2*LG+1);
-        for gi = (i-LG):(i+LG)
-            for gj = (j-LG):(j+LG)
-                % Extract grid to search within
-                G = ExtractWindow(NextImage, gi, gj, LS);
+    diffplots.ax_img0 = subplot(1, 3, 1);
+    diffplots.img_img0 = imagesc(GetSubimage(CurrImage, window));
+    hold(gca, 'on');
+    title(gca, "Current Image");
 
-                % Compute correlation
-                cc = CrossCorrelation(double(S)/255.0, double(G)/255.0);
-                ccgrid(gi-(i-LG)+1, gj-(j-LG)+1) = cc;
+    diffplots.ax_dx = subplot(1, 3, 2);
+    diffplots.img_dx = imagesc(GetSubimage(dx, window));
+    hold(gca, 'on');
+    title(gca, "DX");
 
-                image(ax2, G);
-                image(ax3, ccgrid);
-                clim(ax3, [0.990,1]);
-                pause(1e-2);
-            end
+    diffplots.ax_dy = subplot(1, 3, 3);
+    diffplots.img_dy = imagesc(GetSubimage(dy, window));
+    hold(gca, 'on');
+    title(gca, "DY");
+    
+end
+
+DC = 1;
+DR = 1;
+% for each grid point on the operating window of the current image
+for r = window.rows(1):DR:window.rows(2)
+    fprintf("Row = %06d\n", r)
+
+    for c = window.cols(1):DC:window.cols(2)
+        % fprintf("%06d, ", c)
+        % Extract stencil of surrounding points
+        dr_stens = floor((LS - 1)/2);
+        dc_stens = dr_stens;
+        S = ExtractWindow(PrevImage, r-dr_stens, c - dc_stens, LS, LS);
+
+        % Extract searching window
+        dr_window = floor((LG - 1)/2);
+        dc_window = dr_window;
+        G = ExtractWindow(CurrImage, r-dr_window, c - dc_window, LG, LG);
+
+        % Find best fit using normalized cross-correlation
+        data = ImageInterpolatedCrossCorrelationSearch(S, G);
+
+        % Returns displacement relative bottom corner of search window, 
+        % which is centered around the search point
+        dx(r:(r+DR-1), c:(c+DC-1)) = data.dc;
+        dy(r:(r+DR-1), c:(c+DC-1)) = data.dr;
+
+        % Plot scan
+        if (doplotscan)
+            plotWindows(scanplots.img, scanplots.lines, S, G, data)
+            pause(1e-2);
         end
-        
-        % Find best value
-        [di, dj] = findBest(ccgrid);
-        di = di - (LG - 1);
-        dj = dj - (LG - 1);
-
-        % Insert values
-        i0 = i-window(1)+1;
-        j0 = j-window(2)+1;
-        dx(i0, j0) = di;
-        dy(i0, j0) = dj;
+    end
+    
+    % Plot row results
+    if (doplotdiff)
+        diffplots.img_dx.CData = GetSubimage(dx, window);
+        diffplots.img_dy.CData = GetSubimage(dy, window);
+        drawnow;
+        pause(1e-3);
     end
 end
 
-% Extracts a window of F centered around i, j, with size (2K+1)x(2K+1)
-function G = ExtractWindow(F, i, j, K)
-    x0 = i - K; xe = i + K;
-    y0 = j - K; ye = j + K;
-    G = F(x0:xe, y0:ye);
+%% Plot the displacement fields
+
+
+function G = ExtractWindow(F, i, j, Li, Lj)
+    G = F(i:(i+Li-1), j:(j+Lj-1));
 end
 
-function loss = CrossCorrelation(F, G)
-    loss = sum(F.*G, 'all')/sqrt(sum(F.*F, 'all')*sum(G.*G, 'all'));
-end
-
-function [i, j] = findBest(ccvalues)
-vmax = max(ccvalues, [], 'all');
-[i, j] = find(ccvalues == vmax);
-i = i(1);
-j = j(1);
-end
