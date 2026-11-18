@@ -1,32 +1,31 @@
 %% Postprocess dic with k-means
-dx_sub = GetSubimage(dx, window);
-dy_sub = GetSubimage(dy, window);
-
 % Make k-means clustering of dx and dy data
-data = [dx_sub(:), dy_sub(:)];
-[id, C] = kmeans(data, 4);
-mask = reshape(id, size(dx_sub)) ~= 1;
+data = [data.exx(:), data.exy(:), data.eyy(:)];
+[id, C] = kmeans(data, 3);
+mask = reshape(id, size(data.exx)) == id(sub2ind(size(data.exx), 180, 40));
+[CC, RR] = meshgrid(1:size(data.exx, 2), 1:size(data.exx, 1));
+mask = or(mask, (1 - (RR > 70) .* (RR < 300)) > 0);
 
-dx_filter = dx_sub;
-dx_filter(mask) = 0;
-dy_filter = dy_sub;
-dy_filter(mask) = 0;
+exx_filter = data.exx;
+exx_filter(mask) = 0;
+eyy_filter = data.eyy;
+eyy_filter(mask) = 0;
 
 % Plot clustered data
 figure;
 
 subplot(1, 3, 1);
-imagesc(reshape(id, size(dx_sub)));
+imagesc(reshape(id, size(exx)));
 title("class");
 % colorbar(gca, 'southoutside')
 
 subplot(1, 3, 2);
-imagesc(dx_filter);
+imagesc(exx_filter);
 title("dx(1)");
 clim(gca, [-1, 1]*1e-1);
 
 subplot(1, 3, 3);
-imagesc(dy_filter);
+imagesc(eyy_filter);
 title("dy(1)")
 clim(gca, [-1, 1]*1e-1);
 

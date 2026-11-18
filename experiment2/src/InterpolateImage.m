@@ -1,35 +1,89 @@
-function G = InterpolateImage(H, M, d)
-dM = (reshape(size(M), [2, 1]) - 1) / 2;
-centH = (reshape(size(H), [2, 1]) + 1) / 2;
+function G = InterpolateImage(H, M, d, interpord)
+dM = (size(M, 1) - 1) / 2;
+centH = (size(H, 1) + 1) / 2;
 
 % Compute nearest integer rounded down
 q = floor(d);
-s = d - q; 
+s = reshape(d - q, [1, 2]);
 
 % Compute rows and cols for upper corner
 idx0 = (centH + q) - dM;
 idxe = (centH + q) + dM;
 
+if (sum(idx0 - 1 < 1) > 0 || sum(idxe + 2 > size(H, 1)) > 0)
+    G = zeros(size(M)); 
+    return;
+end
+
 rr = idx0(1):idxe(1);
 cc = idx0(2):idxe(2);
 
-% Compute interpolation functions
-N11 = Lagrange2(s, [0, 0], [1, 1]);
-H11 = H(rr, cc);
+if interpord == 1
+    Nr(1) = LagrangePolynomial2(s(1), 0, 1);
+    Nr(2) = LagrangePolynomial2(s(1), 1, 0);
+    Nc(1) = LagrangePolynomial2(s(2), 0, 1);
+    Nc(2) = LagrangePolynomial2(s(2), 1, 0);    
+    G = zeros(size(M));
+    for i = 0:1
+        for j = 0:1
+            G = G + Nr(i+1)*Nc(j+1) * H(rr+i, cc+j);
+        end
+    end
+elseif interpord == 2
+    Nr(1) = LagrangePolynomial3(s(1), -1,  0,  1);
+    Nr(2) = LagrangePolynomial3(s(1),  0,  1, -1);
+    Nr(3) = LagrangePolynomial3(s(1),  1, -1,  0);
+    Nc(1) = LagrangePolynomial3(s(2), -1,  0,  1);
+    Nc(2) = LagrangePolynomial3(s(2),  0,  1, -1);
+    Nc(3) = LagrangePolynomial3(s(2),  1, -1,  0);
 
-N12 = Lagrange2(s, [1, 0], [0, 1]);
-H12 = H(rr+1, cc);
+    % Compute interpolation functions
+    G = zeros(size(M));
+    for i = -1:1
+        for j = -1:1
+            G = G + Nr(i+2)*Nc(j+2) * H(rr+i, cc+j);
+        end
+    end
+elseif interpord == 3
+    Nr(1) = LagrangePolynomial(s(1), -1,  [ 0, 1, 2]);
+    Nr(2) = LagrangePolynomial(s(1),  0,  [-1, 1, 2]);
+    Nr(3) = LagrangePolynomial(s(1),  1,  [-1, 0, 2]);
+    Nr(4) = LagrangePolynomial(s(1),  2,  [-1, 0, 1]);
+    Nc(1) = LagrangePolynomial(s(2), -1,  [ 0, 1, 2]);
+    Nc(2) = LagrangePolynomial(s(2),  0,  [-1, 1, 2]);
+    Nc(3) = LagrangePolynomial(s(2),  1,  [-1, 0, 2]);
+    Nc(4) = LagrangePolynomial(s(2),  2,  [-1, 0, 1]);
 
-N21 = Lagrange2(s, [0, 1], [1, 0]);
-H21 = H(rr, cc+1);
-
-N22 = Lagrange2(s, [1, 1], [0, 0]);
-H22 = H(rr+1, cc+1);
-
-% Interpolate image
-G = N11 * double(H11) + N12 * double(H12) + N21 * double(H21) + N22 * double(H22);
+    % Compute interpolation functions
+    G = zeros(size(M));
+    for i = -1:2
+        for j = -1:2
+            G = G + Nr(i+2)*Nc(j+2) * H(rr+i, cc+j);
+        end
+    end
+end
 end
 
-function l2 = Lagrange2(x, x0, x1)
-l2 = (x(1) - x1(1)) / (x0(1) - x1(1)) * (x(2) - x1(2)) / (x0(2) - x1(2));
+% Computes tensor product of lagrange polynomial
+function LT = TensorProductLagrange2(x, x0, x1)
+LL = LagrangePolynomial2(x, x0, x1);
+LT = LL(1) * LL(2);
+end
+
+function l = LagrangePolynomial2(x, x0, x1)
+l = (x - x1) ./ (x0 - x1);
+end
+
+% Computes tensor product of lagrange polynomial
+function LT = TensorProductLagrange3(x, x0, x1, x2)
+LL = LagrangePolynomial3(x, x0, x1, x2);
+LT = LL(1) * LL(2);
+end
+
+function l = LagrangePolynomial3(x, x0, x1, x2)
+l = ((x - x1) ./ (x0 - x1)) .* ((x - x2) ./ (x0 - x2));
+end
+
+function l = LagrangePolynomial(x, x0, x1)
+l = prod((x' - x1) ./ (x0' - x1), 2);
 end

@@ -1,0 +1,84 @@
+function data = DIC(PrevImage, CurrImage, window, pixel, motifW, searchW, skip, subpixel_mode, doplotdiff)
+
+% Read inputs
+if (nargin < 9)
+    doplotdiff = 1;
+end
+
+if (size(PrevImage) ~= size(CurrImage))
+    error("Size of previous and current image do not match");
+end
+
+% Get image info
+rmin = window.rows(1); rmax = window.rows(2);
+cmin = window.cols(1); cmax = window.cols(2);
+
+% Create output
+OutH = ceil((rmax - rmin) / skip) + 1;
+OutW = ceil((cmax - cmin) / skip) + 1;
+rrOut = 2:OutH-1;
+ccOut = 2:OutW-1;
+
+data.ux = zeros(OutH, OutW);
+data.uy = zeros(OutH, OutW);
+data.exx = zeros(OutH, OutW);
+data.eyy = zeros(OutH, OutW);
+data.exy = zeros(OutH, OutW);
+data.loss = zeros(OutH, OutW);
+
+% Plot the row of new data after each row is done
+if (doplotdiff)
+    plots = PlotDICResults(CurrImage, PrevImage, window, data, 20e-2, "jet");
+end
+
+% for each grid point on the current image
+for r = rmin:skip:rmax
+    rout = ceil((r - rmin) / skip) + 1;
+    for c = cmin:skip:cmax
+        cout = ceil((c - cmin) / skip) + 1;
+
+        % Extract stencil of surrounding points
+        Motif = ExtractWindow(PrevImage, r, c, motifW);
+
+        % Extract searching window
+        Search = ExtractWindow(CurrImage, r, c, searchW);
+
+        % Find best fit using normalized cross-correlation
+        if (subpixel_mode == "none")
+            params = CCS(Motif, Search);
+        elseif (subpixel_mode == "interpolate_loss") 
+            params = LossInterpolatedCCS(Motif, Search);
+        elseif (subpixel_mode == "interpolate_image")
+            params = ImageInterpolatedCCS(Motif, Search);
+        else
+            error("Invalid subpixel mode %s\n", subpixel_mode)
+        end
+
+        % Returns displacement relative center of search window
+        % which is centered around the search point
+        data.ux(rout, cout) = params.dc * pixel.w;
+        data.uy(rout, cout) = params.dr * pixel.h * (-1.0);
+        data.loss(rout, cout) = params.loss;
+    end
+
+    % Compute strain
+    dux_dx = (data.ux(rrOut + 0, ccOut + 1) - data.ux(rrOut + 0, ccOut - 1)) / (2.0 * skip * pixel.w);
+    dux_dy = (data.ux(rrOut + 1, ccOut + 0) - data.ux(rrOut - 1, ccOut + 0)) / (2.0 * skip * pixel.h);
+    duy_dx = (data.uy(rrOut + 0, ccOut + 1) - data.uy(rrOut + 0, ccOut - 1)) / (2.0 * skip * pixel.w);
+    duy_dy = (data.uy(rrOut + 1, ccOut + 0) - data.uy(rrOut - 1, ccOut + 0)) / (2.0 * skip * pixel.h);
+
+    data.exx = dux_dx;
+    data.exy= 0.5 * (dux_dy + duy_dx);
+    data.eyy = duy_dy;
+
+    % Plot row results
+    if (doplotdiff)
+        UpdateDICResults(plots, data)
+    end
+end
+
+end
+
+function G = ExtractWindow(Image, r, c, W)
+G = Image(r + (-W:W), c + (-W:W));
+end
