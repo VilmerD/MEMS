@@ -35,7 +35,7 @@ loss = NormalizedCrossCorrelation(M, G);
 
 % Add barrier cost for reaching boundaries
 w = max(size(H))/2;
-loss = loss + 1e-1*sum(BoxBarrierLog(qbox, dmin(:), dmax(:), w(:)));
+loss = loss - 1e-3*sum(BoxBarrierLog(qbox, dmin(:), dmax(:), w(:)));
 end
 
 % Computes a two-sided barrier loss, such that 

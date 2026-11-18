@@ -32,7 +32,7 @@ Img0 = importdata(filenames{1});
 
 % Select operating window
 window_big.rows = [1240, 3550];
-window_big.cols = [2600, 4040];
+window_big.cols = [2550, 4040];
 
 % Show first image
 figure;
@@ -49,12 +49,14 @@ title("First image zoomed to fit specimen");
 window.rows = [2150, 2350];
 window.cols = [3450, 3650];
 
+window = window_big;
+
 % Select convolution parameters
-LS = 45;      % motif size
+LS = 47;      % motif size
 LG = 305;     % search window size
 
-m = 1;
-dm = 0;
+m = 20;
+dm = 2;
 PrevImage = importdata(filenames{m});
 CurrImage = importdata(filenames{m+dm});
 
@@ -96,25 +98,32 @@ end
 if (doplotdiff)
     figdiff = figure();
 
-    diffplots.ax_img0 = subplot(1, 3, 1);
+    diffplots.ax_img0 = subplot(1, 4, 1);
     diffplots.img_img0 = imagesc(GetSubimage(CurrImage, window));
     hold(gca, 'on');
     title(gca, "Current Image");
 
-    diffplots.ax_dx = subplot(1, 3, 2);
+    diffplots.ax_img1 = subplot(1, 4, 2);
+    diffplots.img_img1 = imagesc(GetSubimage(PrevImage, window));
+    hold(gca, 'on');
+    title(gca, "Previous Image");
+
+    diffplots.ax_dx = subplot(1, 4, 3);
     diffplots.img_dx = imagesc(GetSubimage(dx, window));
     hold(gca, 'on');
     title(gca, "DX");
+    % clim([-0.5, 0.5])
 
-    diffplots.ax_dy = subplot(1, 3, 3);
+    diffplots.ax_dy = subplot(1, 4, 4);
     diffplots.img_dy = imagesc(GetSubimage(dy, window));
     hold(gca, 'on');
     title(gca, "DY");
+    % clim([-0.5, 0.5])
     
 end
 
-DC = 1;
-DR = 1;
+DC = 10;
+DR = 10;
 % for each grid point on the operating window of the current image
 for r = window.rows(1):DR:window.rows(2)
     fprintf("Row = %06d\n", r)
@@ -124,12 +133,12 @@ for r = window.rows(1):DR:window.rows(2)
         % Extract stencil of surrounding points
         dr_stens = floor((LS - 1)/2);
         dc_stens = dr_stens;
-        S = ExtractWindow(PrevImage, r-dr_stens, c - dc_stens, LS, LS);
+        S = ExtractWindow(PrevImage, r - dr_stens, c - dc_stens, LS, LS);
 
         % Extract searching window
         dr_window = floor((LG - 1)/2);
         dc_window = dr_window;
-        G = ExtractWindow(CurrImage, r-dr_window, c - dc_window, LG, LG);
+        G = ExtractWindow(CurrImage, r - dr_window, c - dc_window, LG, LG);
 
         % Find best fit using normalized cross-correlation
         data = ImageInterpolatedCrossCorrelationSearch(S, G);

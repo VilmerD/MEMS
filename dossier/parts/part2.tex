@@ -1,4 +1,4 @@
-\chapter{Part 2 Title}
+\chapter{Digital Image Correlation}
 
 % Replace this example text with the content of Part 2.
 \section{Overview}
@@ -8,23 +8,59 @@ Write a brief introduction to this part and explain how it relates to the overal
 Organize the material with sections and subsections as needed. You can include
 figures, tables, equations, and citations here.
 
-% Example figure:
-% \begin{figure}[htbp]
-%   \centering
-%   \includegraphics[width=0.75\textwidth]{figures/example.pdf}
-%   \caption{A descriptive caption.}
-%   \label{fig:example}
-% \end{figure}
+%Provide a short overview of DIC:
+%• What are the different types of DIC?
 
-% Example table:
-% \begin{table}[htbp]
-%   \centering
-%   \caption{A concise table caption.}
-%   \begin{tabular}{ll}
-%     \toprule
-%     Item & Description \\
-%     \midrule
-%     Example & Replace with your content \\
-%     \bottomrule
-%   \end{tabular}
-% \end{table}
+%• What are the input data and how are they acquired?
+
+%• What can one measure using DIC (and how does this differ with 2D, 3D-surface and 3D-volume/DVC)?
+
+%• What is local vs global DIC and cumulative versus incremental?
+In cumulative DIC we always compare the current image to the first image. In contrast in incremental DIC we compare to the image one or a few time steps back.
+
+In local DIC the transformation of each window is treated independently. In contrast, in global DIC we consider the displacement of each node as a part of a larger mesh of points and solve for the displacements of each point simultaneously.
+
+Local DIC is faster and has less assumptions. For example fracture can be tracked. On the other hand we can get poor correlation in between regions.
+
+Global DIC is a bit slower, and requires global convergence. It also is a bit more constrained, as it cannot capture fracture. On the other hand you get less oscillations. Also can be used to do inverse analysis, meaning you can compute the initial image given any image. 
+
+%• What are the experimental constraints for the different DIC (2D-surface. 3D-surface, 3D-Volume) approaches, i.e., what is required use 2D/3D/Volume DIC to monitor an experiment? (sample preparation, type of deformation, type of images, experimental set-up constraints, etc.)
+With one camera, you can only realistically measure what is happening in the plane. For 3D-surface DIC we require calibration. 
+
+Digital volume correlation compares digital volumes, requires radiography. The sequence is deform, acquire image, etc.
+
+In projection-based DVS we can somehow use predictions of the deformation. 
+
+If you have two cameras you can detect depth, i.e. now we can measure either out-of-plane displacement or measure non-plane surfaces.
+
+With tomography we're able to compute the full strain tensor.
+
+%• Describe a basic (local) DIC analysis processing flow (DIC algorithm)
+The basic DIC analysis processing flow is as follows. 
+
+%\begin{list}
+%	\item[i] Load two images to compare\\ %$\mathcal{A}$, $\mathcal{B}$ \\
+%	\item[ii] Define analysis window\\ %$\mathcal{W} \subset \mathcal{A}$  \\
+%	\item[iii] Define motif size\\ %$L$ \\
+%	\item[iv] For each pixel\\ %$p \in \mathcal{W}$ \\
+%\end{list}
+
+%• Why is subpixel resolution on displacements needed and how can it be achieved
+Since the displacement field is rarely integer values the calculated displacement should reflect that, i.e. be floats. Otherwise we risk getting checkerboarding.
+
+When we then compute the strain, we require gradients of the displacement field. If we then only have integer displacements we can get very large jumps. 
+
+%• Why might one use DIC in experimental mechanics?
+Identify boundary conditions, rather than assuming that we know what they are. 
+
+Identify non-homogenous phenomena
+
+Identify model parameters, to enrich finite element analysis. 
+
+Identify boundary conditions.
+
+Virtual fields methods.
+
+Integrated digital image correlation..
+
+%• How can DIC be used to develop improved material models
