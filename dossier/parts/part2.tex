@@ -5,33 +5,28 @@
 Write a brief introduction to this part and explain how it relates to the overall dossier.
 
 \section{Main discussion}
-Organize the material with sections and subsections as needed. You can include
-figures, tables, equations, and citations here.
 
 %Provide a short overview of DIC:
 %• What are the different types of DIC?
+%• What is local vs global DIC and cumulative versus incremental?
+There are a few ways to go about DIC and the method can be tweaked in a number of ways. Firstly, DIC can be incremental where, to evaluate image $\mathcal{I}_i$  we compare it to image $\mathcal{I}_{i-N}$  where N is some constant. The advantage of incremental DIC is that the resulting fields can be immediately compared to instantaneous phenomena, such as velocity, acceleration, or other rate-dependent quantities. The disadvantage is if we seek a global quantity, such as the total strain, we have to sum all incremental values which can lead to rounding errors and amplifies errors from interpreting sub-pixel information. At the extreme we have cumulative DIC, where each image $\mathcal{I}_i$ is compared to the first image $\mathcal{I}_0$. This is most beneficial when studying global phenomena, but is more difficult as, potentially, larger search spaces must be used. Hence it is also more time consuming. 
+
+The most intuitive form of DIC is local, where the deformation of each region is treated independently. That is we have no requirement on the local smoothness of the, for example, deformation field. This is very suitable if the deformation is expected to be discontinuous, for example if fracture is studied. An alternative approach is to impose a continuity constraint on the field via, for instance, a FEM grid. This is more computationally expensive, since each grid point must be solved simultaneously, hence requires solving some system of equations. On the other hand, we automatically get a smoother field which may (or may not) be more representative of the actual field. We are also able to introduce a model and fit parameters, which can be used to predict the field for other geometries or otherwise learn more about the system. The drawback is that we introduce some kind of bias in the data. If we choose a poor model, we may get a good fit but the data may not actually represent what is happening. Another drawback is that global DIC requires global convergence. I.e. we can potentially fail to get any results if a small region does not converge to a solution.
+
 
 %• What are the input data and how are they acquired?
+The data is usually collected via cameras if the source is light. Thus we require some light source, i.e. a lamp or an x-ray source. For more sophisticated experiments the source can be neutrons in which case we require a detector capable of measuring neutron data. Since different materials attenuate light (X-ray) and neutrons differently, we are able to take 3D images. To get a full 3D-image the sample must be exposed to the source and an image must be taken from many different angles. The time it takes to capture one 3D image of the sample is hence dependent on the time to expose the specimen and take an image. Also, the sample should be rotated slowly as to not disturb or otherwise change it. Hence there is a upper bound, at least using this method, to how "quick" phenomena can be studied with this method. 
+
+In projection-based DVS we can somehow use predictions of the deformation to reduce the amount of images we require.
+\textcolor{red}{Add a reference here}
+
+If you have two cameras you can detect depth, i.e. now we can measure either out-of-plane displacement or study curved surfaces. 
 
 %• What can one measure using DIC (and how does this differ with 2D, 3D-surface and 3D-volume/DVC)?
 
-%• What is local vs global DIC and cumulative versus incremental?
-In cumulative DIC we always compare the current image to the first image. In contrast in incremental DIC we compare to the image one or a few time steps back.
-
-In local DIC the transformation of each window is treated independently. In contrast, in global DIC we consider the displacement of each node as a part of a larger mesh of points and solve for the displacements of each point simultaneously.
-
-Local DIC is faster and has less assumptions. For example fracture can be tracked. On the other hand we can get poor correlation in between regions.
-
-Global DIC is a bit slower, and requires global convergence. It also is a bit more constrained, as it cannot capture fracture. On the other hand you get less oscillations. Also can be used to do inverse analysis, meaning you can compute the initial image given any image. 
 
 %• What are the experimental constraints for the different DIC (2D-surface. 3D-surface, 3D-Volume) approaches, i.e., what is required use 2D/3D/Volume DIC to monitor an experiment? (sample preparation, type of deformation, type of images, experimental set-up constraints, etc.)
-With one camera, you can only realistically measure what is happening in the plane. For 3D-surface DIC we require calibration. 
-
-Digital volume correlation compares digital volumes, requires radiography. The sequence is deform, acquire image, etc.
-
-In projection-based DVS we can somehow use predictions of the deformation. 
-
-If you have two cameras you can detect depth, i.e. now we can measure either out-of-plane displacement or measure non-plane surfaces.
+Digital volume correlation compares digital volumes, requires radiography. 
 
 With tomography we're able to compute the full strain tensor.
 
@@ -46,21 +41,9 @@ The basic DIC analysis processing flow is as follows.
 %\end{list}
 
 %• Why is subpixel resolution on displacements needed and how can it be achieved
-Since the displacement field is rarely integer values the calculated displacement should reflect that, i.e. be floats. Otherwise we risk getting checkerboarding.
-
-When we then compute the strain, we require gradients of the displacement field. If we then only have integer displacements we can get very large jumps. 
+The displacement field never integer multiples of the grid size, but in comparing pixel intensities we can realistically only get integer displacements. This is problematic for many reasons: 1) the strain field, which is the spatial derivative of the displacement field, will have "jumps" in the transition between two regions with different values, and 2) we risk getting checker-boarding where displacements lower than the grid-size are rounded to zero, resulting in zero strain. To combat this issue we use interpolation, either in the grey-scale pixel values to get estimates of the intensity "between" pixels, or we interpolate the correlation function value between grid-points, and hence get a non-integer displacement. The grey-scale pixel interpolation can be extended to include displacement or arbitrary morphing such as rotations and stretching. This can improve robustness when the sample experiences large deformations locally between images.  
 
 %• Why might one use DIC in experimental mechanics?
-Identify boundary conditions, rather than assuming that we know what they are. 
-
-Identify non-homogenous phenomena
-
-Identify model parameters, to enrich finite element analysis. 
-
-Identify boundary conditions.
-
-Virtual fields methods.
-
-Integrated digital image correlation..
+There are several reasons to use DIC in experimental mechanics, the identification of boundary conditions, study of non-homogeneous phenomena, identify model parameters to name a few. We are also able to study multi-scale phenomena, such as tracking grain boundaries, which is fundamental to material modeling of for example steel.
 
 %• How can DIC be used to develop improved material models
