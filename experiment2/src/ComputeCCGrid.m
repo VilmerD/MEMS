@@ -31,9 +31,11 @@ end
 end
 
 function loss = CrossCorrelation(F, G)
-CC = sum(F.*G, 'all');
-NCC = sqrt(sum(F.*F, 'all')*sum(G.*G, 'all'));
-loss = CC / NCC;
+F = F - mean(F, "all");
+G = G - mean(G, "all");
+num = sum(F.*G, 'all');
+den = sqrt(sum(F.*F, 'all')*sum(G.*G, 'all'));
+loss = num / (den + 1e-16);
 end
 
 function G = ExtractWindow(F, i, j, L)

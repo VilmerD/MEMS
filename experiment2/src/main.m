@@ -22,7 +22,7 @@ pix_dx = pix_xe - pix_x0;
 pixel.w = W2 * 1e-3 / pix_dx;
 
 %% Get Files
-resize = 1;
+resize = 0;
 GetDICFileInfo;
 
 % Read first image
@@ -33,20 +33,20 @@ Img0 = ReadDICFile(filenames{1}, resize);
 
 %% DO DIC with image interpolation
 % Select convolution parameters
-LS = 11;      % motif size
-LG = 23;      % search window size
-skip = 3;
+LS = 8;      % motif size
+LG = 40;      % search window size
+skip = 8;
 
 % Load images
-m = 22;
-dm = 2;
+m = 23;
+dm = 1;
 PrevImage = ReadDICFile(filenames{m}, resize);
 CurrImage = ReadDICFile(filenames{m+dm}, resize);
 
 % Perform dic
 subpixel_mode = "interpolate_image";
 data = DIC(PrevImage, CurrImage, window_small, pixel, LS, LG, skip, subpixel_mode, 1);
-plots = PlotDICResults(CurrImage, PrevImage, window_small, data, 2e-2, "jet");
+% plots = PlotDICResults(CurrImage, PrevImage, window_small, data, 2e-2, "jet");
 
 %% DO with loss interpolation
 % Select convolution parameters
