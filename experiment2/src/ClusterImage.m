@@ -1,10 +1,10 @@
 %% Postprocess dic with k-means
 % Make k-means clustering of dx and dy data
-data = [data.exx(:), data.exy(:), data.eyy(:)];
-[id, C] = kmeans(data, 3);
-mask = reshape(id, size(data.exx)) == id(sub2ind(size(data.exx), 180, 40));
+data_cat = [data.eyy(:), data.exx(:), data.loss(:)];
+[id, C] = kmeans(data_cat, 4);
+mask = reshape(id, size(data.exx)) == id(sub2ind(size(data.exx), 20, 10));
 [CC, RR] = meshgrid(1:size(data.exx, 2), 1:size(data.exx, 1));
-mask = or(mask, (1 - (RR > 70) .* (RR < 300)) > 0);
+%mask = or(mask, (1 - (RR > 70) .* (RR < 300)) > 0);
 
 exx_filter = data.exx;
 exx_filter(mask) = 0;
@@ -15,7 +15,7 @@ eyy_filter(mask) = 0;
 figure;
 
 subplot(1, 3, 1);
-imagesc(reshape(id, size(exx)));
+imagesc(reshape(id, size(data.exx)));
 title("class");
 % colorbar(gca, 'southoutside')
 

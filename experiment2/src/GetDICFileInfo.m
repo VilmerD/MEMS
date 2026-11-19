@@ -9,8 +9,8 @@ for i = 1:nfiles
 end
 
 % Select operating window
-window_big.rows = [1200, 3800];
-window_big.cols = [2400, 4200];
+window_big.rows = [1240, 3760];
+window_big.cols = [2440, 4160];
 % window_small.rows = [2140, 2660];
 % window_small.cols = [2940, 3660];
 

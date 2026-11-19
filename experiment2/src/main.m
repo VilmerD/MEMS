@@ -1,4 +1,5 @@
 % Measurements are in mm and seconds
+clearvars;
 L1 = 80.6;
 L2 = 10.0;
 W1 = 25.5;
@@ -49,9 +50,9 @@ plots = PlotDICResults(CurrImage, PrevImage, window_small, data, 2e-2, "jet");
 
 %% DO with loss interpolation
 % Select convolution parameters
-LS = 7;      % motif size
-LG = 15;      % search window size
-skip = 4;
+LS = 6;      % motif size
+LG = 13;      % search window size
+skip = 6;
 
 % Load images
 m = 23;
@@ -61,7 +62,7 @@ CurrImage = ReadDICFile(filenames{m+dm}, resize);
 
 % Perform dic
 subpixel_mode = "interpolate_loss";
-data = DIC(PrevImage, CurrImage, window_small, pixel, LS, LG, skip, subpixel_mode, 1);
-plots = PlotDICResults(CurrImage, PrevImage, window_small, data, 2e-2, "jet");
+data = DIC(PrevImage, CurrImage, window_big, pixel, LS, LG, skip, subpixel_mode, 1);
+plots = PlotDICResults(CurrImage, PrevImage, window_big, data, 2e-2, "jet");
 
 %% Plot the displacement fields

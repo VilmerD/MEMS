@@ -34,9 +34,9 @@ xticks(diffplots.ax_exy, []);
 yticks(diffplots.ax_exy, []);
 
 diffplots.ax_loss = nexttile(diffplots.t, 5);
-diffplots.img_loss = imagesc(diffplots.ax_loss, data.loss*(-1));
+diffplots.img_loss = imagesc(diffplots.ax_loss, data.loss);
 title(diffplots.ax_loss, "loss");
-clim(diffplots.ax_loss, [0.99, 1]);
+clim(diffplots.ax_loss, [0.999, 1]);
 colormap(diffplots.ax_loss, mmap);
 xticks(diffplots.ax_loss, []);
 yticks(diffplots.ax_loss, []);
