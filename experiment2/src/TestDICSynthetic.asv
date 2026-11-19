@@ -1,0 +1,28 @@
+%% Test dic on constructed data
+% 1. Make fake data
+% 2. Shift frame
+% 3. Apply dic
+% 4. Check result
+
+%% Make fake data
+% Define image size
+imgSize = [256, 512];
+% Define number of spots
+Img = zeros(imgSize, 'uint8');
+
+% Add synthetic Gaussian spots to the image
+[xGrid, yGrid] = meshgrid(1:imgSize(2), 1:imgSize(1));
+nSpots = 300;
+for spot = 1:nSpots
+    spotX = randi([1, imgSize(2)]);
+    spotY = randi([1, imgSize(1)]);
+    spotW = randi([1, 3]);
+    Img = Img + uint8(255 * exp(-((xGrid - spotX).^2 + (yGrid - spotY).^2) / (2 * spotW)));
+end
+
+% imagesc(Img);
+
+%% Shift frame
+ImgPrev = circshift(Img,shift,1);
+
+subplot()
