@@ -1,40 +1,39 @@
-\chapter{Acoustic and Ultrasonic Methods for Experimental Mechanics}
 
-% Replace this example text with the content of Part 3.
+
+\chapter{Acoustic and Ultrasonic Methods}
+
 \section{Overview}
 
 % Provide a summary of elastic wave properties/characteristics
-Elastic waves are 
 
 % What are the different types of waves and how do they differ in their propagation?
 
-Elastic waves, so usually non-destructive. They transfer energy.
+A wave is not a phenomena which exists in its own right, rather it emerges from time or space dependent systems or fields. Thus waves can only exist in some media, be it a solid (as is the case in experimental mechancis) or fluid, or even electro-magnetic waves such as light. Since waves are an emergent phenomena, a wave can be anything. The movement of tightly packed humans (such as at concerts) is well-approximated by a plane fluid. In the context of experimental mechanics we are interested in waves in solid mater.
 
-Electromagnetic waves can, as opposed to mechanical waves, be transferred through vaccum. 
-
-For acoustic waves:
-
-We usually divide them into different ranges.
-
-We can for instance use seismic waves to probe the earth. This range is sub-sonic and very low frequency. Can be used to check for bomb tests.
-
-We then have acoustic waves that we can hear.
-
-Different wave types, but we will focus on compressional waves.
-
-Gasses cannot shear, so we can't hear or produce shear waves (acoustically). Important to remember that we can still have shear waves in materials
+Waves are often times sinusoidal, but can in principle be any shape. For instance surface waves (Rayleigh and Love waves), or the the wavefronts of a circular membrane (such as a drum) are not sinusoidal in the radial direction. Worth noting is that in space-time systems, standing waves, which are fixed in space but time variant, can emerge. Non-sinusoidal waves can appear even for regular geometries (i.e. infinite geometries). However, most systems have some amount of energy loss. This loss is often times proportional to the wave frequency (higher frequencies having smaller lifetimes than lower). As such, non-sinusoidal waves, such as square waves (which contain lots of high-frequency components) often degenerate to their lowest frequency components, which (depending on the geometry) are sinusoidal.
 
 % What is an elastic wave?
+In the context of experimental mechanics we are interested in waves propagating in solids. The governing equation is given by the balance of linear momentum, which is written in strong form as
+\begin{align}
+	\nabla \cdot \boldsymbol{\sigma} + \boldsymbol{b} 	& = \rho \ddot{\boldsymbol{u}} 	& \text{in } & \Omega \label{eq:linear_momentum}\\
+	\boldsymbol{\sigma}\cdot\boldsymbol{n}				& = \overline{\boldsymbol{t}}				& \text{on } & \partial\Omega^t
+\end{align}
+where $\boldsymbol{\sigma}$ is the Cauchy stress, $\nabla$ denotes the gradient, $\boldsymbol{b}$ are the body forces, $\rho$ is the material density and $\boldsymbol{u}$ are the displacements. $\Omega$ denotes the body of interest and $\partial\Omega^t$ the portion of its surface with known traction. For free waves, we assume zero body forces, $\boldsymbol{b}$. Furthermore, for purely elastic waves we also assume a linear relationship between the stresses and strains. While this restricts our discussion to small strains, it's worth noting that even large-strain elastic waves are possible. The solution of \eqref{eq:linear_momentum} depends on which body is studied and the conditions. Unfortunately, in general its not possible to find a solution to the wave equation. There are however some special case. For instance, under plane strain conditions the solution is given by Rayleigh and Love waves. For the elastic waves in a string, the wave equation becomes
+\begin{equation}
+	\ddot{u} = \rho \partial^2_x u
+\end{equation}
+where $u$ now only have one component, and is the string's normal deflection. The characteristic solutions to the above are given by $u(t, x) = u_0(x \pm vt)$ where $u_0$ is the initial condition and $v$ is the wave-speed. In 3D media, a similar wave equation can be found, except there are now $3$ individual components, and there is a wave speed for all three components in all three dimensions. Many of these are the same if the material is well approximated by isotropy, but in general the wave speed in any component is different depending on the wave's direction of propagation. \textcolor{red}{cite and find expression for this.}. 
 
-The wave equation.
+% How can we transmit/receive elastic waves? What are acoustic emissions and how are they measured? How might the information be used to gain understanding about the mechanisms of deformation in different materials?
 
-Assumes linear elasticity (hookes law).
+Elastic waves in solid matter can be detected with Piezoelectric contact transducers which use precisely tuned voltage-sensitive quartz crystals (maybe ref here). Importantly, these transducers can be used to both measure and produce waves. As such, experiments can be passive, wherein a transducer is attached to the specimen and waves are induced by the deformation of the specimen. Experiments can also be active, where the specimen is actuated using the transducer and the reflection of the signal is measured.
 
-Gives periodic solution in space and time.
+Examples of passive acoustic experiments can be found in....
 
-When going between materials we have transmission, reflection etc.
+For example, the acoustic emissions of a specimen can be used to infer the creation or propagation of crack. Another example is geology, a signal is induced by the earth's crust or third party human sources (read: bombs).
 
-% What are the key parameters defining a wave/waveform with respect to time and space coordinates
+Multiple transducers can be placed on a single specimen. The measured acoustic signal can be then used to estimate the origin of an event, given some model of the wave propagation. It is also possible to characterize the polarity of an event (i.e. shear, tensile  or compressive) using multiple sensors placed on either end of a symmetric specimen. This is known as the polarity method \textcolor{red}{cite}. 
+
 
 % What can be measured in terms of data from recorded elastic-wave waveforms?
 
@@ -50,7 +49,6 @@ Passive measurements: No active induction of signal, just wait and record.
 	
 We can measure horizontal accelerations (two components) and vertical accelerations. This can b used to measure polarizaton (distinguish p-waves from s-waves).
 
-% How can we transmit/receive elastic waves? What are acoustic emissions and how are they measured? How might the information be used to gain understanding about the mechanisms of deformation in different materials?
 
 % What information can be gained about a material from measurements of elastic wave velocities?
 We can measure arrival time, which gives the velocity of the material.
@@ -66,19 +64,18 @@ If we mount multiple samples which measure the acoustic singal at different poin
 By looking at the polarity of the deformation we can determine its type: shear or pressure.
 
 % What is anisotropy (the definition and also the material causes of it) and how might it be measured with ultrasonic measurements?
-Matierals which is isotropic has the same behaviour (elastic modulus, conductivity etc) in all directions. While anisotropic materials may behave differently in different directions. It's important to keep in mind that these are just models. In reality, all materials are anisotropic.
+Virtually all materials behave differently depending on their orientation in space. For instance paperboard, which consists of paper fibers oriented in a principle direction, is stiffer when stretched in the direction of the fiber orientation, and weaker when pulled in the orthogonal direction. This is known as anisotropy, meaning \text{not the same in all directions}. The degree of anisotropy can, however, vary widely, paperboard being on the far end of high anisotropy. Some materials are however almost identical in all orientations, and are treated as isotropic, meaning \textit{the same in all directions}. This information is key for developing efficient material models, which are greatly simplified if the material is well approximated by isotropy. For example, metals are very well approximated by isotropy. Whether or not a material is anisotropic or isotropic depends on its microstructure.  
 
-Examples of materials which are well described by isotropy: metals.
+To test if a material is isotropic we can try to measure the wave speed in different orientations. If they are the same in all principle directions, the material is at least orthotropic. If it's completely independent on the spatial orientation the material is isotropic. On the other hand, we can, for instance, estimate the (edward and thomas) fiber direction of a material by measuring the wave speed in a number of directions. The fiber direction should then have the fastest wave-speed, and vice versa. 
 
-Examples of materials which have high anisotropy: paperboard, wood, biological materia. 
+Extending on this idea, some materials behave hyper-elastically, for example rubber which has a wide elastic range. The material properties, for instance the wave speed, are in any point of these materials dependent on the stress state at that point. 
 
-Load-dendent stiffness.
-
-Shear-wave splitting. Looking at wave amplitude in fiber-direction, cross-direction and 45' orientation.
-
-The acoustic properies can be dependent on the stresses in a material. This can be measured using acousics.
+% Reflection and refraction
+In the transition between two material phases with different elastic properties.
 
 % What is ultrasonic tomography? What data are needed to perform ultrasonic tomography and what is the procedure for analysing the data to produce a map of ultrasonic velocity (or attenuation)
+
+The goal of ultrasonic tomography is to make full-field measurements of a specimen by measuring the acoustic signal at many points along its boundary. By introducing a model of the specimen's behavior, model parameters can be fit using the gathered data. For example, the specimen can be discretized into any number of elements, each of which has it's own wave speed. The spatial resolution is bounded from below by the signal's largest wavelength in the specimen. Since the wave may refract and bend where the wave speed changes, the wave speed at any point will be dependent on the signal intensity at that point, and hence the model is non-linear. Fortunately, this problem is only weakly non-linear, so an iterative procedure is expected to converge quickly. (Hall et al 2005, 2007).
 
 In hospital we send in signal, and wait for a response. In materials we can also have a transducer and a measurement device on another side.
 
