@@ -1,8 +1,4 @@
-
-
 \chapter{Acoustic and Ultrasonic Methods}
-
-\section{Overview}
 
 % Provide a summary of elastic wave properties/characteristics
 
@@ -18,15 +14,17 @@ In the context of experimental mechanics we are interested in waves propagating 
 	\nabla \cdot \boldsymbol{\sigma} + \boldsymbol{b} 	& = \rho \ddot{\boldsymbol{u}} 	& \text{in } & \Omega \label{eq:linear_momentum}\\
 	\boldsymbol{\sigma}\cdot\boldsymbol{n}				& = \overline{\boldsymbol{t}}				& \text{on } & \partial\Omega^t
 \end{align}
-where $\boldsymbol{\sigma}$ is the Cauchy stress, $\nabla$ denotes the gradient, $\boldsymbol{b}$ are the body forces, $\rho$ is the material density and $\boldsymbol{u}$ are the displacements. $\Omega$ denotes the body of interest and $\partial\Omega^t$ the portion of its surface with known traction. For free waves, we assume zero body forces, $\boldsymbol{b}$. Furthermore, for purely elastic waves we also assume a linear relationship between the stresses and strains. While this restricts our discussion to small strains, it's worth noting that even large-strain elastic waves are possible. The solution of \eqref{eq:linear_momentum} depends on which body is studied and the conditions. Unfortunately, in general its not possible to find a solution to the wave equation. There are however some special case. For instance, under plane strain conditions the solution is given by Rayleigh and Love waves. For the elastic waves in a string, the wave equation becomes
+where $\boldsymbol{\sigma}$ is the Cauchy stress, $\nabla$ denotes the gradient, $\boldsymbol{b}$ are the body forces, $\rho$ is the material density and $\boldsymbol{u}$ are the displacements. $\Omega$ denotes the body of interest and $\partial\Omega^t$ the portion of its surface subject to traction $\overline{\boldsymbol{t}}$. For free waves, we assume zero body forces $\boldsymbol{b} = \boldsymbol{0}$. Furthermore, for purely elastic waves, we assume a linear constiutive relationship, $\boldsymbol{\sigma}=\mathbb{D}\mathrel{:}\boldsymbol{\epsilon}$. Note that the consitituive matrix $\mathbb{D}$ may vary spatially. Additionally, while this restricts our discussion to small strains, it's worth noting that even large-strain elastic waves are possible.
+
+The solution of \eqref{eq:linear_momentum} depends on which body is studied and the boundary conditions. Unfortunately, its not possible to find a general solution. There are however some special cases. For instance, under plane strain conditions the solution is given by Rayleigh and Love waves \textcolor{red}{refs}. For the elastic waves in a string, the wave equation becomes
 \begin{equation}
-	\ddot{u} = \rho \partial^2_x u
+	\ddot{u} = v^2 \partial^2_x u
 \end{equation}
-where $u$ now only have one component, and is the string's normal deflection. The characteristic solutions to the above are given by $u(t, x) = u_0(x \pm vt)$ where $u_0$ is the initial condition and $v$ is the wave-speed. In 3D media, a similar wave equation can be found, except there are now $3$ individual components, and there is a wave speed for all three components in all three dimensions. Many of these are the same if the material is well approximated by isotropy, but in general the wave speed in any component is different depending on the wave's direction of propagation. \textcolor{red}{cite and find expression for this.}. 
+where $u$ now only has one component, and is the string's normal deflection. The characteristic solutions to the above are given by $u(t, x) = u_0(x \pm vt)$ where $u_0$ is the initial condition and $v$ is the wave-speed. In 3D media, a similar wave equation can be found, except there are now $3$ individual components, and for each component of $u$ there for all three dimensions. Many of these are the same if the material is well approximated by isotropy, but in general the wave speed in any component is different depending on the wave's direction of propagation. \textcolor{red}{cite and find expression for this.}.
 
 % How can we transmit/receive elastic waves? What are acoustic emissions and how are they measured? How might the information be used to gain understanding about the mechanisms of deformation in different materials?
 
-Elastic waves in solid matter can be detected with Piezoelectric contact transducers which use precisely tuned voltage-sensitive quartz crystals (maybe ref here). Importantly, these transducers can be used to both measure and produce waves. As such, experiments can be passive, wherein a transducer is attached to the specimen and waves are induced by the deformation of the specimen. Experiments can also be active, where the specimen is actuated using the transducer and the reflection of the signal is measured.
+Elastic waves in solid matter can be detected with Piezoelectric contact transducers which use precisely tuned voltage-sensitive quartz crystals (maybe ref here). Importantly, these transducers can be used to both measure and produce waves. As such, experiments can be passive, wherein a transducer is attached to the specimen and waves are induced by the deformation of the specimen. Experiments can also be active, where the specimen is actuated using the transducer and the reflection of the signal is measured with the same transducer.
 
 Examples of passive acoustic experiments can be found in....
 
@@ -34,34 +32,21 @@ For example, the acoustic emissions of a specimen can be used to infer the creat
 
 Multiple transducers can be placed on a single specimen. The measured acoustic signal can be then used to estimate the origin of an event, given some model of the wave propagation. It is also possible to characterize the polarity of an event (i.e. shear, tensile  or compressive) using multiple sensors placed on either end of a symmetric specimen. This is known as the polarity method \textcolor{red}{cite}. 
 
-
 % What can be measured in terms of data from recorded elastic-wave waveforms?
-
-We want to be able to measure waves!
-
-Send wave into object using a piezoelectric element. Or, we can measure the wave signal.
-
-Pulse-echo: send signal into material and switch to recieve signal.
-	
-Through-transmission?
-
-Passive measurements: No active induction of signal, just wait and record.
-	
-We can measure horizontal accelerations (two components) and vertical accelerations. This can b used to measure polarizaton (distinguish p-waves from s-waves).
-
+For a single source we can perform a fourier transformation, which exposes the amplitude and frequency information of the signal. If the source of an event is known, we can correlate it with the measured signal to give an estimate of the material' wave speed. Or, if multiple transducers are mounted to a single sample we can triangulate the location of an event by assuming that the wave eminating from the event source travels elastically and at constant speed. 
 
 % What information can be gained about a material from measurements of elastic wave velocities?
-We can measure arrival time, which gives the velocity of the material.
-
 Can be used to describe the mechanisms of failure.
+
+Something about wood cracks?
 
 Wood example: there is constant brittle deformation (whatever that means).
 
 Tetrapak, used to characterize brittle failure.
 
-If we mount multiple samples which measure the acoustic singal at different points, we can use the signals to find the location of an event by assuming that the wave from the point travels elastically and at constant speed.
+Porosity
 
-By looking at the polarity of the deformation we can determine its type: shear or pressure.
+Damage
 
 % What is anisotropy (the definition and also the material causes of it) and how might it be measured with ultrasonic measurements?
 Virtually all materials behave differently depending on their orientation in space. For instance paperboard, which consists of paper fibers oriented in a principle direction, is stiffer when stretched in the direction of the fiber orientation, and weaker when pulled in the orthogonal direction. This is known as anisotropy, meaning \text{not the same in all directions}. The degree of anisotropy can, however, vary widely, paperboard being on the far end of high anisotropy. Some materials are however almost identical in all orientations, and are treated as isotropic, meaning \textit{the same in all directions}. This information is key for developing efficient material models, which are greatly simplified if the material is well approximated by isotropy. For example, metals are very well approximated by isotropy. Whether or not a material is anisotropic or isotropic depends on its microstructure.  
@@ -76,29 +61,4 @@ In the transition between two material phases with different elastic properties.
 % What is ultrasonic tomography? What data are needed to perform ultrasonic tomography and what is the procedure for analysing the data to produce a map of ultrasonic velocity (or attenuation)
 
 The goal of ultrasonic tomography is to make full-field measurements of a specimen by measuring the acoustic signal at many points along its boundary. By introducing a model of the specimen's behavior, model parameters can be fit using the gathered data. For example, the specimen can be discretized into any number of elements, each of which has it's own wave speed. The spatial resolution is bounded from below by the signal's largest wavelength in the specimen. Since the wave may refract and bend where the wave speed changes, the wave speed at any point will be dependent on the signal intensity at that point, and hence the model is non-linear. Fortunately, this problem is only weakly non-linear, so an iterative procedure is expected to converge quickly. (Hall et al 2005, 2007).
-
-In hospital we send in signal, and wait for a response. In materials we can also have a transducer and a measurement device on another side.
-
-Example: detect crack in material
-
-A-scan is singular amplityde versus time.
-
-B-scan two-dimensional scan through the sample. 
-
-C-scan: cube of data. ???
-
-Can measure speed of wave through material, if the distance between two points is known. 
-
-Can measure the attenuation as a function of the frequency (since the initial amplitude is known).
-
-We can infer the porosity.
-
-Damage of Neopolitan rock. 
-
-Rheometry.
-
-Ultrasonic tomography.
-Material has been stiffened by the defromation.
-
-Can extend this to a full-field approach to map out material properties.
 
