@@ -25,44 +25,76 @@ pixel.w = W2 * 1e-3 / pix_dx;
 resize = 0;
 GetDICFileInfo;
 
-% Read first image
-Img0 = ReadDICFile(filenames{1}, resize);
+%% Read some metadata
+Img0_tiff = Tiff(filenames{1}, 'r');
+Imge_tiff = Tiff(filenames{end}, 'r');
 
-% Read image metadata
-[ImgH, ImgW] = size(Img0);
+% Time span of images
+t0 = datetime(dir(Img0_tiff.FileName).date);
+te = datetime(dir(Imge_tiff.FileName).date);
+dT = seconds(te - t0);
+
+% Read image size
+[ImgH, ImgW] = size(read(Img0_tiff));
+
+%% Get key frames
+% Time values
+key_frames = [28, 70, 82, 144, 202];
+
+% Translate into frame numbers assuming that the image captures and force-displacement
+% started at the same time
+% and that at time = 0 the first image is taken
+% such that we should round up
+key_frames_id = ceil(key_frames / 3); 
 
 %% DO DIC with image interpolation
 % Select convolution parameters
-LS = 8;      % motif size
-LG = 40;      % search window size
-skip = 8;
+paramsA.name = "parametersA";
+paramsA.LS = 12;
+paramsA.LG = 22;
+paramsA.skip = 12;
+
+paramsB.name = "parametersB";
+paramsB.LS = 20;
+paramsB.LG = 30;
+paramsB.skip = 12;
+
+paramsC.name = "parametersC";
+paramsC.LS = 8;
+paramsC.LG = 18;
+paramsC.skip = 12;
+
+allParams = {paramsA, paramsB, paramsC};
+
+%% Do image interpolation dic
+subpixel.mode = "interpolate_image";
+subpixel.params = "disp";
+subpixel.order = 3;
+
+for params = allParams
+    ProcessParameters(filenames, key_frames_id, window_small, pixel, resize, params{1}, "int_img", subpixel);
+end
+
+%% Do loss interpolation
+subpixel.mode = "interpolate_loss";
+subpixel.order = 3;
 
 % Load images
-m = 23;
-dm = 1;
-PrevImage = ReadDICFile(filenames{m}, resize);
-CurrImage = ReadDICFile(filenames{m+dm}, resize);
+for params = allParams
+    ProcessParameters(filenames, key_frames_id, window_small, pixel, resize, params, "int_loss", subpixel);
+end
 
-% Perform dic
-subpixel_mode = "interpolate_image";
-data = DIC(PrevImage, CurrImage, window_small, pixel, LS, LG, skip, subpixel_mode, 1);
-% plots = PlotDICResults(CurrImage, PrevImage, window_small, data, 2e-2, "jet");
+%% 
 
-%% DO with loss interpolation
-% Select convolution parameters
-LS = 6;      % motif size
-LG = 13;      % search window size
-skip = 6;
+function data = ProcessParameters(filenames, frames, window, pixel, resize, DICParams, outform, subpixel)
+for frame = frames
+    fprintf("Processing frame %i, %s\n", frame, outform);
+    PrevImage = ReadDICFile(filenames{frame-1}, resize);
+    CurrImage = ReadDICFile(filenames{frame}, resize);
 
-% Load images
-m = 23;
-dm = 1;
-PrevImage = ReadDICFile(filenames{m}, resize);
-CurrImage = ReadDICFile(filenames{m+dm}, resize);
-
-% Perform dic
-subpixel_mode = "interpolate_loss";
-data = DIC(PrevImage, CurrImage, window_big, pixel, LS, LG, skip, subpixel_mode, 1);
-plots = PlotDICResults(CurrImage, PrevImage, window_big, data, 2e-2, "jet");
-
-%% Plot the displacement fields
+    % Perform dic
+    data = DIC(PrevImage, CurrImage, window, pixel, DICParams.LS, DICParams.LG, DICParams.skip, subpixel, 0);
+    filename = fullfile("data", DICParams.name, sprintf("%s_%i.mat", outform, frame));
+    save(filename, "DICParams", "data", "subpixel", "window");
+end
+end

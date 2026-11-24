@@ -1,11 +1,11 @@
-function data = DIC(PrevImage, CurrImage, window, pixel, motifW, searchW, skip, subpixel_mode, doplotdiff)
+function data = DIC(PrevImage, CurrImage, window, pixel, motifW, searchW, skip, subpixel, doplotdiff)
 
 % Read inputs
 if (nargin < 9)
     doplotdiff = 1;
 end
 
-if (  size(PrevImage) ~= size(CurrImage))
+if (size(PrevImage) ~= size(CurrImage))
     error("Size of previous and current image do not match");
 end
 
@@ -46,14 +46,14 @@ for r = rpoints
         Search = ExtractWindow(CurrImage, r, c, searchW);
 
         % Find best fit using normalized cross-correlation
-        if (subpixel_mode == "none")
+        if (subpixel.mode == "none")
             params = CCS(Motif, Search);
-        elseif (subpixel_mode == "interpolate_loss") 
+        elseif (subpixel.mode == "interpolate_loss") 
             params = LossInterpolatedCCS(Motif, Search);
-        elseif (subpixel_mode == "interpolate_image")
-            params = ImageInterpolatedCCS(Motif, Search);
+        elseif (subpixel.mode == "interpolate_image")
+            params = ImageInterpolatedCCS(Motif, Search, subpixel);
         else
-            error("Invalid subpixel mode %s\n", subpixel_mode)
+            error("Invalid subpixel mode %s\n", subpixel)
         end
 
         % Returns displacement relative center of search window

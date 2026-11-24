@@ -26,3 +26,15 @@ window_big.H = window_big.rows(2) - window_big.rows(1);
 window_big.W = window_big.cols(2) - window_big.cols(1);
 window_small.H = window_small.rows(2) - window_small.rows(1);
 window_small.W = window_small.cols(2) - window_small.cols(1);
+
+% Read force-displacement data
+force_data = importdata("../experiment1/data/force.txt");
+times = force_data.data(:, 1) * 1e-3;
+times = times - times(1);
+
+force_scaling = 26.07;
+force = force_data.data(:, 2);        % N
+force = force - force(end);
+force = force * force_scaling;
+
+sample_rate_force = mean(times(2:end) - times(1:end-1));

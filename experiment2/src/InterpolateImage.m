@@ -11,7 +11,7 @@ idx0 = (centH + q) - dM;
 idxe = (centH + q) + dM;
 
 if (sum(idx0 - 1 < 1) > 0 || sum(idxe + 2 > size(H, 1)) > 0)
-    G = zeros(size(M)); 
+    G = zeros(size(M));
     return;
 end
 
@@ -19,10 +19,10 @@ rr = idx0(1):idxe(1);
 cc = idx0(2):idxe(2);
 
 if interpord == 1
-    Nr(1) = LagrangePolynomial2(s(1), 0, 1);
-    Nr(2) = LagrangePolynomial2(s(1), 1, 0);
-    Nc(1) = LagrangePolynomial2(s(2), 0, 1);
-    Nc(2) = LagrangePolynomial2(s(2), 1, 0);    
+    Nr(1) = LagrangePolynomial(s(1), 0, 1);
+    Nr(2) = LagrangePolynomial(s(1), 1, 0);
+    Nc(1) = LagrangePolynomial(s(2), 0, 1);
+    Nc(2) = LagrangePolynomial(s(2), 1, 0);
     G = zeros(size(M));
     for i = 0:1
         for j = 0:1
@@ -30,12 +30,12 @@ if interpord == 1
         end
     end
 elseif interpord == 2
-    Nr(1) = LagrangePolynomial3(s(1), -1,  0,  1);
-    Nr(2) = LagrangePolynomial3(s(1),  0,  1, -1);
-    Nr(3) = LagrangePolynomial3(s(1),  1, -1,  0);
-    Nc(1) = LagrangePolynomial3(s(2), -1,  0,  1);
-    Nc(2) = LagrangePolynomial3(s(2),  0,  1, -1);
-    Nc(3) = LagrangePolynomial3(s(2),  1, -1,  0);
+    Nr(1) = LagrangePolynomial(s(1), -1,  [0,  1]);
+    Nr(2) = LagrangePolynomial(s(1),  0,  [1, -1]);
+    Nr(3) = LagrangePolynomial(s(1),  1, [-1,  0]);
+    Nc(1) = LagrangePolynomial(s(2), -1,  [0,  1]);
+    Nc(2) = LagrangePolynomial(s(2),  0,  [1, -1]);
+    Nc(3) = LagrangePolynomial(s(2),  1, [-1,  0]);
 
     % Compute interpolation functions
     G = zeros(size(M));
@@ -62,26 +62,6 @@ elseif interpord == 3
         end
     end
 end
-end
-
-% Computes tensor product of lagrange polynomial
-function LT = TensorProductLagrange2(x, x0, x1)
-LL = LagrangePolynomial2(x, x0, x1);
-LT = LL(1) * LL(2);
-end
-
-function l = LagrangePolynomial2(x, x0, x1)
-l = (x - x1) ./ (x0 - x1);
-end
-
-% Computes tensor product of lagrange polynomial
-function LT = TensorProductLagrange3(x, x0, x1, x2)
-LL = LagrangePolynomial3(x, x0, x1, x2);
-LT = LL(1) * LL(2);
-end
-
-function l = LagrangePolynomial3(x, x0, x1, x2)
-l = ((x - x1) ./ (x0 - x1)) .* ((x - x2) ./ (x0 - x2));
 end
 
 function l = LagrangePolynomial(x, x0, x1)

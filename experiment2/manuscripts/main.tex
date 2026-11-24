@@ -1,0 +1,180 @@
+% Self-contained local starter inspired by the NTNU Laboratory Report in Physics
+% template by Vebjorn S. Forde (CC BY 4.0):
+% https://www.overleaf.com/latex/templates/ntnu-laboratory-report-in-physics/zrkxstqtpdpv
+% This is a simplified adaptation, not the original multi-file project.
+% Compile with pdfLaTeX in TeXstudio. Replace the example text and metadata.
+
+\documentclass[5p,a4paper]{elsarticle}
+
+\usepackage{pdfpages}
+
+% Common TeX Live packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\geometry{margin=25mm}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage[numbers]{natbib}
+
+% ---------- Report details: edit these ----------
+\newcommand{\reporttitle}{Uniaxial Tensile Test of Polycarbonate with DIC}
+\newcommand{\course}{Modern Experimental Mechanics}
+\newcommand{\studentname}{Vilmer Dahlberg}
+\newcommand{\studentid}{}
+\newcommand{\labdate}{2026/11/05}
+\newcommand{\submissiondate}{\today}
+\newcommand{\institution}{Department of Construction Sciences,  Lund University}
+
+%----------------------------------------------------------
+% Math macros
+%----------------------------------------------------------
+\usepackage{amsmath,amssymb,amsfonts}%
+\usepackage{tensor}
+\usepackage{upgreek}
+\usepackage{sansmath}
+\usepackage{xspace}
+\usepackage{array}
+\usepackage{mathtools}
+\newcommand{\bm}[1]{\text{\boldmath{$#1$}}}
+
+\graphicspath{{../results/}, {../figures/}}
+
+\begin{document}
+	
+	\begin{frontmatter}
+	
+		\title{\reporttitle}
+		\author{\studentname}
+		\address{\course\\\institution}
+		
+		\begin{abstract}
+			
+		\end{abstract}
+		
+		\begin{keyword}
+			DIC \sep polycarbonate \sep figure
+		\end{keyword}
+	
+	\end{frontmatter}
+	
+	\section{Introduction}
+	This report is concerned with the digital image correlation (DIC) of a polycarbonate sample subject to uniaxial tension. This is an extension of a previous experiment in which only the force-displacement data was analyzed. To avoid repeating myself i will refer to the report, found in \ref{app:report1} for an introduction to the experiment.
+	
+	
+	% Introduction to DIC
+	As mentioned in the previous report, the force-displacement data gathered via the strain gauge does not contain any information about the local deformation of the sample. Since we're considering deformable bodies, and not rigid bodies, the deformation state in the sample will vary throughout it's geometry. Thus we require full-field measurements of the deformation state if we want to be able to analyze the material behavior.
+	
+	Full-field measurements are roughly divided into destructive and non-destructive methods \textcolor{red}{ref to something here}, of which photo-DIC \textcolor{red}{what's this actually called?} is a common non-destructive alternative. Partially due to its ease of use, at least compared to alternatives such as X-ray or neutron tomography. 
+	
+	% Intro should not explain the method, maybe just compare some popular DIC methods and discuss local versus global and incremental versus cumulative DIC
+	
+	% in-situ????
+	
+	%
+	In 2D camera-DIC, the sample is imaged throughout the experiment. As a post-processing step, the images are 
+	
+	% how do you even explain DIC?
+	
+	% something about the speckle pattern
+	
+	% something about comparing small regions at a time (local DIC)
+	
+	% 
+	Additionally, to be able to compare image segments in the proceeding DIC step the sample must have a texture on its surface. 
+	
+	
+	To perform 2D camera-DIC we 
+	
+	\section{Method}
+	
+	\subsection{Experimental setup}
+	In this experiment we use the same method as in the previous experiment, except we add both a camera and lighting equipment to capture images of the sample throughout the tensile test.
+	
+	
+	We begin by applying a texture to the sample, which in this experiment consists of a black ink sprayed over the specimen's surface.
+	
+	% After the experiment part, how the DIC is actually performed. 
+	
+	% Note about sampling frequency of load cell
+	
+	% Note about sampling frequency of camera
+	
+	\subsection{DIC}
+	
+	% Correlation function
+	Before discussing correlation functions, its worth revisiting the definition of the angle $\theta_{uv} \in [0,\,\pi/2]$ between two vectors $u,\, v \in \mathbb{R}^n$, given by
+	\begin{equation}
+		f_{cc}(u, v) = \frac{u\cdot v}{||u||_2 ||v||_2} = \cos{\theta_{uv}}
+	\end{equation}
+	If two vectors $u$ and $v$ are orthogonal, then their inner product is zero and hence $\theta = \frac{\pi}{2}$. On the other hand, if they are parallel, then $\cos{\theta} = 1$, and hence $\theta=0$. The loss function used in this experiment is the zero-normalized cross-correlation (ZNCC) \textcolor{red}{ref to this}, which is related to the cosine of the angle. Given two images $F,\,G \in \mathbb{R}^{n\times n}$, the ZNCC is defined by
+	\begin{equation}
+		l_{ZNCC}(F, G) = f_{cc}(\textsc{FL}(F) - \mu(F), \textsc{FL}(G) - \mu(G))
+	\end{equation}
+	where $\textsc{FLAT}(X)$ flattens the $n\times n$ image $X\in \mathbb{R}^{n\times n}$ to the vector $x\in \mathbb{R}^{2n}$ and $\mu(x)$ computes the mean value of $x$. 
+	
+	% Subpixel refinement
+	In local DIC, for each strain measurement, we take have a reference image $\mathcal{F}$ and the current image $\mathcal{G}$. We then proceed by considering one region of the specimen at a time, represented by the motif $\mathcal{M}\subset\mathcal{F}$. To compute the displacement $u_x$, $u_y$ of points occupying this region from the current time until  we compare the motif $\mathcal{M}$ with equally sized regions sub-regions $\mathcal{H}$ of $\mathcal{G}$. For each subregion we compute the loss $l(M, H)$. We then consider the subregion $\mathcal{H}^\star$ which maximizes the correlation, and let the displacements be the displacement of $\mathcal{H}$ relative to $\mathcal{M}$.
+	
+	In practice, we expect that the displacements of points should be local, meaning we restrict the search to a subwindow.
+	
+	The problem with this approach is that, since we compare sub-regions of the two images, we can only get as a result an integer number of pixels which the motif was displaced, whereas in reality the displacement is a real number, which has a probability of $0$ of being an integer. Then, when the strain fields (which are gradients of the displacements) are computed, we may get either very large jumps in the gradient near rounding points, or very small gradients near whole number of displaced pixels. This is not a new problem, common remedies are interpolation of the output or input, or so-called optical flow.
+	
+	In interpolating the input, we let the displacements be real numbers and pose the cross-correlation search as an optimization problem, which can be solved with gradient descent. When evaluating the cross-correlation we require an subpart of the image, which is given by interpolating the image given the displacement. \textcolor{red}{refine this statement}. The benefit to this method is that any model of the deformation can be built, which allows for stretches and rotations, for example. This does lead to a somewhat more complex implementation, however. 
+	
+	In interpolating the output, we proceed as before, but once all the grid-points have been considered, we build an interpolation of the cross-correlation which spans not only the integers but also the in-between real values, and minimize the loss over those values. The benefit being it's relatively simple.
+	
+	In this experiment both methods are considered.
+	
+	
+	\section{Results and Discussion}
+	We present the final force-displacement graph in figure \ref{fig:result:force_disp}. Performing the DIC for all frames would be excessive, wherefore only a few key frames, marked by red circles in the graph, are analyzed. The corresponding strain fields and cross-correlation are shown for the image-interpolated variant in Figure \ref{fig:result:strain_interp_img}, and for the loss-interpolated variant in Figure \ref{fig:result:strain_interp_loss}.
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=\linewidth]{force_disp.png}
+		\caption{Measured forces using the load cell over time.}
+		\label{fig:result:force_disp}
+	\end{figure}
+	
+	\clearpage
+	\onecolumn
+	\begin{figure}
+		\centering
+		\includegraphics[width=\linewidth]{int_img_grid.png}
+		\caption{Top and middle row show the incremental infinitesimal strain in the $x$- and $y-$ direction, respectively. Bottom row shows the loss. The background is filtered using a mask, based on a K-means clustering of the strain fields and loss field.}
+		\label{fig:result:strain_interp_img}
+	\end{figure}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=\linewidth]{int_loss_grid.png}
+		\caption{Top and middle row show the incremental infinitesimal strain in the $x$- and $y-$ direction, respectively. Bottom row shows the loss. The background is filtered using a mask, based on a K-means clustering of the strain fields and loss field.}
+		\label{fig:result:strain_interp_loss}
+	\end{figure}
+	
+	\twocolumn
+	
+	\section{Conclusions}
+	
+	\bibliographystyle{unsrtnat}
+	\bibliography{refs.bib}
+	
+	
+	\clearpage
+	\appendix
+	\onecolumn
+	\section{Uniaxial Tensile Test of Polycarbonate Sample} \label{app:report1}
+	\includepdf[pages=-, pagecommand={}]{../../experiment1/manuscripts/main_simple.pdf}
+	\twocolumn
+	
+\end{document}

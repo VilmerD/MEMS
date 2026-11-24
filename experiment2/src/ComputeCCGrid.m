@@ -24,18 +24,10 @@ for r = imgRMin:imgRMax
         G = ExtractWindow(Image, r, c, dM);
 
         % Compute correlation
-        CCVals(rout, cout) = CrossCorrelation(Motif, G);
+        CCVals(rout, cout) = ZNCC(Motif, G);
     end
 end
 
-end
-
-function loss = CrossCorrelation(F, G)
-F = F - mean(F, "all");
-G = G - mean(G, "all");
-num = sum(F.*G, 'all');
-den = sqrt(sum(F.*F, 'all')*sum(G.*G, 'all'));
-loss = num / (den + 1e-16);
 end
 
 function G = ExtractWindow(F, i, j, L)
