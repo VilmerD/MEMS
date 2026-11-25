@@ -15,7 +15,7 @@ diffplots.ax_loss = nexttile(diffplots.t, 2);
 loss_deg = acosd(min(ones(size(data.loss)), data.loss));
 diffplots.img_loss = imagesc(diffplots.ax_loss, loss_deg);
 % title(diffplots.ax_loss, "loss");
-clim(diffplots.ax_loss, [0, 10]);
+clim(diffplots.ax_loss, [0, 30]);
 colormap(diffplots.ax_loss, mmap);
 xticks(diffplots.ax_loss, []);
 yticks(diffplots.ax_loss, []);

@@ -50,26 +50,42 @@ key_frames_id = ceil(key_frames / 3);
 %% DO DIC with image interpolation
 % Select convolution parameters
 paramsA.name = "parametersA";
-paramsA.LS = 12;
-paramsA.LG = 22;
+paramsA.LS = 8;
+paramsA.LG = 20;
 paramsA.skip = 12;
 
 paramsB.name = "parametersB";
-paramsB.LS = 20;
-paramsB.LG = 30;
+paramsB.LS = 12;
+paramsB.LG = 24;
 paramsB.skip = 12;
 
 paramsC.name = "parametersC";
-paramsC.LS = 8;
-paramsC.LG = 18;
+paramsC.LS = 20;
+paramsC.LG = 32;
 paramsC.skip = 12;
 
-allParams = {paramsA, paramsB, paramsC};
+paramsD.name = "parametersD";
+paramsD.LS = 8;
+paramsD.LG = 20;
+paramsD.skip = 8;
+
+paramsE.name = "parametersE";
+paramsE.LS = 12;
+paramsE.LG = 24;
+paramsE.skip = 8;
+
+paramsF.name = "parametersF";
+paramsF.LS = 20;
+paramsF.LG = 32;
+paramsF.skip = 8;
+
+% allParams = {paramsA, paramsB, paramsC, paramsD, paramsE, paramsF};
+allParams = {paramsB, paramsE};
 
 %% Do image interpolation dic
 subpixel.mode = "interpolate_image";
 subpixel.params = "disp";
-subpixel.order = 3;
+subpixel.order = 4;
 
 for params = allParams
     ProcessParameters(filenames, key_frames_id, window_small, pixel, resize, params{1}, "int_img", subpixel);
@@ -81,7 +97,7 @@ subpixel.order = 3;
 
 % Load images
 for params = allParams
-    ProcessParameters(filenames, key_frames_id, window_small, pixel, resize, params, "int_loss", subpixel);
+    ProcessParameters(filenames, key_frames_id, window_small, pixel, resize, params{1}, "int_loss", subpixel);
 end
 
 %% 

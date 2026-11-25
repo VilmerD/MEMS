@@ -3,17 +3,18 @@
 key_frames_id = [10, 24, 28, 48, 68];
 nframes = numel(key_frames_id);
 epsmin_perc = 4;
-lossmin_deg = 30;
+lossmin_rad = pi/4;
 
 form = "int_img";
 params = "parametersB";
 titles = 'ABCDEFG';
 
 domask = 1;
+nclusters = 2;
 
 fig = figure("Color", "w");
 theme(fig, "light");
-t = tiledlayout(3, nframes + 1, ...
+t = tiledlayout(4, nframes + 1, ...
     'Padding', 'tight', ...
     'TileSpacing', 'none');
 
@@ -22,6 +23,11 @@ for i = 1:numel(key_frames_id)
 
     fileName = fullfile('data', params, sprintf("%s_%i.mat", form, frame));
     S = load(fileName).data;
+
+    [e1, e2, th] = Principle(S.exx, S.eyy, S.exy);
+    S.e1 = e1;
+    S.e2 = e2;
+    S.th = th;
     
     % Handle either:
     % 1) fields stored directly in the MAT-file, or
@@ -37,22 +43,21 @@ for i = 1:numel(key_frames_id)
         end
     end
     
-    fields = {'exx', 'eyy', 'loss'};
-    fields_names = {"$\Delta \epsilon_{xx}$ [\%]", "$\Delta \epsilon_{yy}$ [\%]", "$loss$ [deg]"};
+    fields = {'e1', 'e2', 'th', 'loss'};
+    fields_names = {"$\Delta \epsilon_{1}$ [\%]", "$\Delta \epsilon_{2}$ [\%]", "$\varphi [rad]$", "$loss$ [rad]"};
     
     if (domask)
         size_img = size(S.exx);
-        if (form == "int_loss")
-            NCLUST = 2;
-            [id, c] = kmeans([S.loss(:)], NCLUST);
-        else
-            NCLUST = 2;
-            [id, c] = kmeans([S.exx(:), S.eyy(:), S.loss(:)], NCLUST);
-        end
-        ID = reshape(id, size(S.exx));
+
+        [id, c] = kmeans([S.loss(:)], nclusters);
+        
+        ID = reshape(id, size_img);
 
         rvoid = round(size_img(1)/2);
         cvoid = 1;
+
+        % We know that the middle of column 1 is just void so use
+        % it as reference
         mask = (ID == ID(rvoid, cvoid));
     end
 
@@ -60,10 +65,12 @@ for i = 1:numel(key_frames_id)
         nexttile(t, i + (nframes + 1) * (k - 1));
 
         % Get data and scale/map
-        if (k < 3)
+        if (k == 1 || k == 2)
             field_data = data.(fields{k})*100;
+        elseif (k == 3)
+            field_data = data.(fields{k});
         else
-            field_data = acosd(data.(fields{k}));
+            field_data = acos(data.(fields{k}));
         end
     
         % Mask out bad values
@@ -87,12 +94,15 @@ for i = 1:numel(key_frames_id)
         end
 
         % Colormap and limits
-        if (k == 3) 
-            clim([0, lossmin_deg]);
-            colormap(gca, "gray");
-        else
+        if (k == 1 || k == 2)
             clim([-1, 1]*epsmin_perc)
-            colormap(gca, "spring");
+            colormap(gca, "parula");
+        elseif (k == 3) 
+            clim([0, pi]);
+            colormap(gca, "copper");
+        else
+            clim([0, lossmin_rad]);
+            colormap(gca, "copper");
         end
     
         % Set colorbar if to the very right

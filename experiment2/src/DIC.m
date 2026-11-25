@@ -27,6 +27,7 @@ data.exx = zeros(OutH, OutW);
 data.eyy = zeros(OutH, OutW);
 data.exy = zeros(OutH, OutW);
 data.loss = zeros(OutH, OutW);
+params.loss = 1.0;
 
 % Plot the row of new data after each row is done
 if (doplotdiff)
@@ -51,7 +52,11 @@ for r = rpoints
         elseif (subpixel.mode == "interpolate_loss") 
             params = LossInterpolatedCCS(Motif, Search);
         elseif (subpixel.mode == "interpolate_image")
-            params = ImageInterpolatedCCS(Motif, Search, subpixel);
+            if (exist("q0", "var") && params.loss > 0.95)
+                [params, q0] = ImageInterpolatedCCS(Motif, Search, subpixel, q0);
+            else
+                [params, q0] = ImageInterpolatedCCS(Motif, Search, subpixel);
+            end
         else
             error("Invalid subpixel mode %s\n", subpixel)
         end

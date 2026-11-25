@@ -1,4 +1,4 @@
-function data = ImageInterpolatedCCS(Motif, Image, subpixel)
+function [data, qopt] = ImageInterpolatedCCS(Motif, Image, subpixel, q0)
 % Searches for best fit of S on the subset image NextImage
 % Motif             is the motif, must be smaller than NextImageSubset
 % Search            is the subset of a following image
@@ -7,20 +7,30 @@ function data = ImageInterpolatedCCS(Motif, Image, subpixel)
 % Define displacement parameters
 % q = dc, dr and measures the displacement from the image center to the
 
-if nargin < 3 || subpixel.params == "disp"
-    % interpolated window
-    q0 = [0; 0];
-    func = @(q)  (-1.0) * InterpolateCC(Motif, Image, q, subpixel.order);
-    options = optimset("TolFun", 1e-9, "TolX", 1e-9, "FunValCheck", "on");
+if subpixel.params == "disp"
+    nrestarts = 0;
+    loss = 0;
+    while (loss < 0.95 && nrestarts <= 1)
+        % interpolated window
+        if (nargin < 4 || nrestarts > 0)
+            data0 = LossInterpolatedCCS(Motif, Image);
+            q0 = [data0.dr; data0.dc];
+        end
+        func = @(q)  (-1.0) * InterpolateCC(Motif, Image, q, subpixel.order);
+        options = optimset("TolFun", 1e-9, "TolX", 1e-9, "FunValCheck", "off");
+    
+        % Maximize loss using fminsearch
+        [qopt, loss, ~] = fminsearch(func, q0, options);
+        loss = loss * (-1.0);
 
-    % Maximize loss using fminsearch
-    [qopt, loss, ~] = fminsearch(func, q0, options);
+        % Return the displacement
+        data.dr = qopt(1);
+        data.dc = qopt(2);
+        data.loss = loss;
 
-    % Return the displacement
-    data.dr = qopt(1);
-    data.dc = qopt(2);
-    data.loss = loss * (-1.0);
-
+        % Update nrestarts
+        nrestarts = nrestarts + 1;
+    end
 elseif subpixel.params == "disp_stretch"
     % interpolated window
     q0 = [0; 0; 1; 1];
@@ -41,6 +51,7 @@ elseif subpixel.params == "disp_stretch"
     % And loss
     data.loss = loss * (-1.0);
 end
+
 end
 
 function loss = InterpolateCC(M, H, q, interpord)

@@ -10,8 +10,8 @@ s = reshape(d - q, [1, 2]);
 idx0 = (centH + q) - dM;
 idxe = (centH + q) + dM;
 
-if (sum(idx0 - 1 < 1) > 0 || sum(idxe + 2 > size(H, 1)) > 0)
-    G = zeros(size(M));
+if (sum(idx0 - 2 < 1) > 0 || sum(idxe + 2 > size(H, 1)) > 0)
+    G = ones(size(M));
     return;
 end
 
@@ -59,6 +59,25 @@ elseif interpord == 3
     for i = -1:2
         for j = -1:2
             G = G + Nr(i+2)*Nc(j+2) * H(rr+i, cc+j);
+        end
+    end
+elseif interpord == 4
+    Nr(1) = LagrangePolynomial(s(1), -2, [-1, 0, 1, 2]);
+    Nr(2) = LagrangePolynomial(s(1), -1, [-2, 0, 1, 2]);
+    Nr(3) = LagrangePolynomial(s(1),  0, [-2, -1, 1, 2]);
+    Nr(4) = LagrangePolynomial(s(1),  1, [-2, -1, 0, 2]);
+    Nr(5) = LagrangePolynomial(s(1),  2, [-2, -1, 0, 1]);
+
+    Nc(1) = LagrangePolynomial(s(2), -2, [-1, 0, 1, 2]);
+    Nc(2) = LagrangePolynomial(s(2), -1, [-2, 0, 1, 2]);
+    Nc(3) = LagrangePolynomial(s(2),  0, [-2, -1, 1, 2]);
+    Nc(4) = LagrangePolynomial(s(2),  1, [-2, -1, 0, 2]);
+    Nc(5) = LagrangePolynomial(s(2),  2, [-2, -1, 0, 1]);
+
+    G = zeros(size(M));
+    for i = -2:2
+        for j = -2:2
+            G = G + Nr(i+3) * Nc(j+3) * H(rr+i, cc+j);
         end
     end
 end
