@@ -123,11 +123,11 @@
 	where $\textsc{FLAT}(X)$ flattens the $n\times n$ image $X\in \mathbb{R}^{n\times n}$ to the vector $x\in \mathbb{R}^{2n}$ and $\mu(x)$ computes the mean value of $x$. 
 	
 	% Subpixel refinement
-	In local DIC, for each strain measurement, we take have a reference image $\mathcal{F}$ and the current image $\mathcal{G}$. We then proceed by considering one region of the specimen at a time, represented by the motif $\mathcal{M}\subset\mathcal{F}$. To compute the displacement $u_x$, $u_y$ of points occupying this region from the current time until  we compare the motif $\mathcal{M}$ with equally sized regions sub-regions $\mathcal{H}$ of $\mathcal{G}$. For each subregion we compute the loss $l(M, H)$. We then consider the subregion $\mathcal{H}^\star$ which maximizes the correlation, and let the displacements be the displacement of $\mathcal{H}$ relative to $\mathcal{M}$.
+	In local DIC, for each strain measurement, we take a reference image $\mathcal{F}$ and the current image $\mathcal{G}$. We then proceed by considering one region of the specimen at a time, represented by the motif $\mathcal{M}\subset\mathcal{F}$. To compute the displacement of points near the region of interest, we compare $\mathcal{M}$ with equally sized regions sub-regions $\mathcal{H}$ of $\mathcal{G}$. For each subregion $\mathcal{H}$ the loss $l$, in this case $l_{ZNCC}$, is evaluated and stored. The $\mathcal{H}$ for which the loss attains it's maximum defines the displacement of the original region of interest.  
+	
+	In practice, the displacement of any region of the sample may take on any finite displacement. In fact, it may also rotate and warp. However, in comparing sub-regions of the \textit{images}, the displacement may only be an integer multiple of the pixel size in any given direction. Thus using the outlined approach, in the best case we get a rounding error of the displacements (in the worst case the displacements are much worse than just a rounding error). The strain fields, which are gradients of the displacements, may have very large jumps in regions where the actual displacement modulo the pixel size is close to $0.5$ pixel sizes, or very small gradients in regions where the actual displacement modulo the pixel size is close to $0$. This is not a new problem, common remedies are interpolation of the output or input, or so-called optical flow.
 	
 	In practice, we expect that the displacements of points should be local, meaning we restrict the search to a subwindow.
-	
-	The problem with this approach is that, since we compare sub-regions of the two images, we can only get as a result an integer number of pixels which the motif was displaced, whereas in reality the displacement is a real number, which has a probability of $0$ of being an integer. Then, when the strain fields (which are gradients of the displacements) are computed, we may get either very large jumps in the gradient near rounding points, or very small gradients near whole number of displaced pixels. This is not a new problem, common remedies are interpolation of the output or input, or so-called optical flow.
 	
 	In interpolating the input, we let the displacements be real numbers and pose the cross-correlation search as an optimization problem, which can be solved with gradient descent. When evaluating the cross-correlation we require an subpart of the image, which is given by interpolating the image given the displacement. \textcolor{red}{refine this statement}. The benefit to this method is that any model of the deformation can be built, which allows for stretches and rotations, for example. This does lead to a somewhat more complex implementation, however. 
 	
@@ -137,7 +137,7 @@
 	
 	
 	\section{Results and Discussion}
-	We present the final force-displacement graph in figure \ref{fig:result:force_disp}. Performing the DIC for all frames would be excessive, wherefore only a few key frames, marked by red circles in the graph, are analyzed. The corresponding strain fields and cross-correlation are shown for the image-interpolated variant in Figure \ref{fig:result:strain_interp_img}, and for the loss-interpolated variant in Figure \ref{fig:result:strain_interp_loss}.
+	We present the final force-displacement graph in figure \ref{fig:result:force_disp}. Performing the DIC for all frames would be excessive, wherefore only a few key frames, marked by red circles in the graph, are analyzed. The corresponding strain fields and cross-correlation are shown for the image-interpolated variant in Figure \ref{fig:result:strain_interp_img}.
 	
 	\begin{figure}
 		\centering
