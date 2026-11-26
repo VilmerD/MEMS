@@ -101,7 +101,17 @@
 	In this experiment we use the same method as in the previous experiment, except we add both a camera and lighting equipment to capture images of the sample throughout the tensile test.
 	
 	
-	We begin by applying a texture to the sample, which in this experiment consists of a black ink sprayed over the specimen's surface.
+	We begin by applying a texture to the sample, which in this experiment consists black ink sprayed over the specimen's surface.
+	
+	The camera (dector) is mounted in front of the sample. To illuminate the sample, a light is placed to the right of the camera, as per Figure \ref{fig:method:experimental_setup}.
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=\linewidth]{force_disp.png}
+		\caption{Experimental setup.}
+		\label{fig:method:experimental_setup}
+	\end{figure}
+	
 	
 	% After the experiment part, how the DIC is actually performed. 
 	
@@ -125,19 +135,36 @@
 	% Subpixel refinement
 	In local DIC, for each strain measurement, we take a reference image $\mathcal{F}$ and the current image $\mathcal{G}$. We then proceed by considering one region of the specimen at a time, represented by the motif $\mathcal{M}\subset\mathcal{F}$. To compute the displacement of points near the region of interest, we compare $\mathcal{M}$ with equally sized regions sub-regions $\mathcal{H}$ of $\mathcal{G}$. For each subregion $\mathcal{H}$ the loss $l$, in this case $l_{ZNCC}$, is evaluated and stored. The $\mathcal{H}$ for which the loss attains it's maximum defines the displacement of the original region of interest.  
 	
-	In practice, the displacement of any region of the sample may take on any finite displacement. In fact, it may also rotate and warp. However, in comparing sub-regions of the \textit{images}, the displacement may only be an integer multiple of the pixel size in any given direction. Thus using the outlined approach, in the best case we get a rounding error of the displacements (in the worst case the displacements are much worse than just a rounding error). The strain fields, which are gradients of the displacements, may have very large jumps in regions where the actual displacement modulo the pixel size is close to $0.5$ pixel sizes, or very small gradients in regions where the actual displacement modulo the pixel size is close to $0$. This is not a new problem, common remedies are interpolation of the output or input, or so-called optical flow.
-	
-	In practice, we expect that the displacements of points should be local, meaning we restrict the search to a subwindow.
+	In practice, the displacement of any region of the sample may take on any finite displacement. In fact, it may also rotate and warp. However, in comparing sub-regions of the \textit{images}, the displacement may only be an integer multiple of the pixel size in any given direction. Thus using the outlined approach, in the best case we get a rounding error of the displacements. The strain fields, which are gradients of the displacements, may have very large jumps in regions where the actual displacement modulo the pixel size is close to $0.5$ pixel sizes, or very small gradients in regions where the actual displacement modulo the pixel size is close to $0$. This is not a new problem, common remedies are interpolation of the output or input, or so-called optical flow.
 	
 	In interpolating the input, we let the displacements be real numbers and pose the cross-correlation search as an optimization problem, which can be solved with gradient descent. When evaluating the cross-correlation we require an subpart of the image, which is given by interpolating the image given the displacement. \textcolor{red}{refine this statement}. The benefit to this method is that any model of the deformation can be built, which allows for stretches and rotations, for example. This does lead to a somewhat more complex implementation, however. 
 	
 	In interpolating the output, we proceed as before, but once all the grid-points have been considered, we build an interpolation of the cross-correlation which spans not only the integers but also the in-between real values, and minimize the loss over those values. The benefit being it's relatively simple.
 	
-	In this experiment both methods are considered.
+	In practice, we expect that the displacements of points should be local, meaning we restrict the search to a subwindow of the current image.
 	
+	The DIC algorithm implemented for this experiment is based on image interpolation. Inter-pixel values are found by interpolating neighboring images, with lagrange polynomials. The displacements are found by using a simplex optimization algorithm, which is gradient-free. Due to it's sensitivity of initial guess, we choose the last displacement value as initial guess, if the loss is high enough. Otherwise, we use find an initial guess using loss-interpolation. The algorithm is described in
+	
+	% algorithm descrption
+	
+	Finally, to compute the displacement gradients we use a central difference scheme, i.e.
+	\begin{align*}
+		\frac{\partial u_x^{i,j}}{\partial x} & \approx \frac{u_x^{i,j+1}-u_x^{i,j-1}}{2 \Delta x} \\
+		\frac{\partial u_x^{i,j}}{\partial y} & \approx \frac{u_x^{i+1,j}-u_x^{i-1,j}}{2 \Delta y} \\
+		\frac{\partial u_y^{i,j}}{\partial x} & \approx \frac{u_y^{i,j+1}-u_y^{i,j-1}}{2 \Delta x} \\
+		\frac{\partial u_y^{i,j}}{\partial y} & \approx \frac{u_y^{i+1,j}-u_y^{i-1,j}}{2 \Delta y} 
+	\end{align*}
+	where $u_x^{i,j}$ and $u_y^{i,j}$ denote the measured displacements at pixel $i,j$ in the $x$ and $y$ direction, respectively. 
+	
+	% Principle strains and directions?
+	
+	% How to compute the pixel height and width.
+	To compute relate the height and width the first image is read. 
 	
 	\section{Results and Discussion}
-	We present the final force-displacement graph in figure \ref{fig:result:force_disp}. Performing the DIC for all frames would be excessive, wherefore only a few key frames, marked by red circles in the graph, are analyzed. The corresponding strain fields and cross-correlation are shown for the image-interpolated variant in Figure \ref{fig:result:strain_interp_img}.
+	The force-displacement graph is shown in figure \ref{fig:result:force_disp}. As performing the DIC for all frames would be excessive, only a few key frames, marked by red circles in the graph, are analyzed. The corresponding incremental principle strains and cross-correlation are shown in Figure \ref{fig:result:strain_interp_img}. 
+	
+	Starting with frame A, the strain field looks to be quite homogenous (at this scale) although there seems to be some concentration near the notch center. Also note the rather big estimated strains near the boundary. This is caused by the displacement effectively being zero outside the sample. 
 	
 	\begin{figure}
 		\centering
